@@ -1,0 +1,7 @@
+# compiled object files and executables
+**/*.o
+**/*.so
+**/*.x
+
+# build directories
+**/build/
