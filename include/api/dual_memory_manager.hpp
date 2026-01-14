@@ -1,3 +1,5 @@
+// TODO: add file description
+
 #pragma once
 
 #include "../private/abort_manager.hpp"
@@ -15,6 +17,8 @@ template <typename T> struct DualArray {
   size_t size;
 };
 
+// TODO: separate methods definitions from their declarations (use .incl
+//       files if needed)
 // TODO: add description
 // TODO: maye add alignment (either to the constructor or to the memory
 //       allocation call

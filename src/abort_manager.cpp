@@ -1,5 +1,9 @@
+// TODO: add file description
+
 #include "../include/private/abort_manager.hpp"
 #include <iostream>
+
+namespace DualMemoryManager {
 
 // TODO: maybe add MPI
 // TODO: add description
@@ -13,3 +17,5 @@ void abort_manager(const std::string message) {
 
   return;
 }
+
+} // namespace DualMemoryManager

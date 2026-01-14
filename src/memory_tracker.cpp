@@ -1,4 +1,8 @@
+// TODO: add file description
+
 #include "../include/private/memory_tracker.hpp"
+
+namespace DualMemoryManager {
 
 // TODO: add description
 bool add_to_memory_tracker(std::map<std::string, size_t> &memory_tracker,
@@ -18,11 +22,13 @@ bool add_to_memory_tracker(std::map<std::string, size_t> &memory_tracker,
 bool remove_from_memory_tracker(std::map<std::string, size_t> &memory_tracker,
                                 const std::string label) {
 
-    /* try to remove element */
-    const int ret = memory_tracker.erase(label);
+  /* try to remove element */
+  const int ret = memory_tracker.erase(label);
 
-    /* compute outcome */
-    const bool out = (ret == 0);
+  /* compute outcome */
+  const bool out = (ret == 0);
 
-    return out;
+  return out;
 }
+
+} // namespace DualMemoryManager
