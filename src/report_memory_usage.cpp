@@ -1,6 +1,6 @@
 // TODO: add file description
 
-#include "../include/api/dual_memory_manager.hpp"
+#include "../include/dual_memory_manager/dual_memory_manager.hpp"
 #include <iomanip>
 #include <iostream>
 
