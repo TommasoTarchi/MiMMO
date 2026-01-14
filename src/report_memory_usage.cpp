@@ -56,6 +56,13 @@ void DualMemoryManager::report_memory_usage() {
               << std::setw(size_col_width) << size
               << std::setw(on_device_col_width) << on_device << "\n";
   }
+  std::cout << small_separator;
+
+  /* print total memory usage */
+  std::cout << "Total host memory used: " << total_host_memory << " bytes"
+            << "\n";
+  std::cout << "Total device memory used: " << total_device_memory << " bytes"
+            << "\n";
   std::cout << big_separator << "\n";
 
   return;
