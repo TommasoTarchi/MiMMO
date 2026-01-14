@@ -7,6 +7,6 @@
 namespace DualMemoryManager {
 
 // TODO: add description
-void abort_manager(std::string &);
+void abort_manager(const std::string);
 
 } // namespace DualMemoryManager

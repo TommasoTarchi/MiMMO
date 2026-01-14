@@ -7,7 +7,7 @@ namespace DualMemoryManager {
 
 // TODO: maybe add MPI
 // TODO: add description
-void abort_manager(std::string &message) {
+void abort_manager(const std::string message) {
 
   /* make sure standard output is flushed */
   std::cout.flush();
