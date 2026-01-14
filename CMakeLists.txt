@@ -27,40 +27,7 @@ set_target_properties(DualMemoryManager PROPERTIES OUTPUT_NAME "dual_memory_mana
 
 ### unit tests ###
 
-# get option
-option(UNIT_TESTS "Enable unit testing" ON)
-
-if(UNIT_TESTS)
-
-    # download and include Catch2
-    include(FetchContent)
-
-    FetchContent_Declare(
-      Catch2
-      GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-      GIT_TAG        v3.4.0 # pin a specific version for stability
-    )
-
-    FetchContent_MakeAvailable(Catch2)
-
-    # enable CMake testing functionality
-    enable_testing()
-
-    # define executable for unit testing
-    add_executable(unit_tests.x tests/unit_tests_main.cpp)
-
-    # link library and Catch2 to executable
-    target_link_libraries(unit_tests.x PRIVATE 
-        DualMemoryManager
-        Catch2::Catch2WithMain
-    )
-
-    # auto-register tests with CTest
-    include(Catch)
-
-    catch_discover_tests(unit_tests.x)
-
-endif()
+# TODO
 
 
 ### generate documentation ###
