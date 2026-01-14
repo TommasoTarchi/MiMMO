@@ -9,6 +9,9 @@ namespace DualMemoryManager {
 // TODO: add description
 void abort_manager(std::string &message) {
 
+  /* make sure standard output is flushed */
+  std::cout.flush();
+
   /* return abort message */
   std::cerr << "DualMemoryManager error: " << message << std::endl;
 
