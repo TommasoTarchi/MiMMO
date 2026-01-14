@@ -119,7 +119,8 @@ public:
     }
   }
 
-  // TODO: report memory usage
+  // TODO: add description
+  void report_memory_usage(void);
 
   // TODO: maybe the destructor is needed?
 };
