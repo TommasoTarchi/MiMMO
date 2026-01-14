@@ -42,7 +42,7 @@ public:
 
   // TODO: add description
   template <typename T>
-  DualArray<T> allocate(std::string &label, const size_t num_elements,
+  DualArray<T> allocate(const std::string label, const size_t num_elements,
                         const bool on_device = false) {
     DualArray<T> dual_array;
 
