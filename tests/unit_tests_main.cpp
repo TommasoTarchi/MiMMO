@@ -4,7 +4,51 @@
  * @brief Unit tests for the DualMemoryManager library, using Catch2.
  */
 
-#include "dual_memory_manager/dual_memory_manager.hpp"
+#include "../include/dual_memory_manager/dual_memory_manager.hpp"
 #include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("general", "[dual_memory_manager]") { REQUIRE(true); }
+// TODO: add description
+struct test_struct {
+  int first_field;
+  float second_field;
+};
+
+// TODO: add description
+TEST_CASE("Base types - No device", "[dual_memory_manager]") {
+  DualMemoryManager::DualMemoryManager dual_memory_manager =
+      DualMemoryManager::DualMemoryManager();
+
+  DualMemoryManager::DualArray<int> first_test_array =
+      dual_memory_manager.allocate<int>("first_test_array", 10, false);
+
+  dual_memory_manager.report_memory_usage();
+
+  DualMemoryManager::DualArray<float> second_test_array =
+      dual_memory_manager.allocate<float>("second_test_array", 20, false);
+
+  dual_memory_manager.report_memory_usage();
+
+  dual_memory_manager.free<int>(first_test_array);
+  dual_memory_manager.free<float>(second_test_array);
+
+  dual_memory_manager.report_memory_usage();
+
+  REQUIRE(true);
+}
+
+// TODO: add description
+TEST_CASE("Struct - No device", "[dual_memory_manager]") {
+  DualMemoryManager::DualMemoryManager dual_memory_manager =
+      DualMemoryManager::DualMemoryManager();
+
+  DualMemoryManager::DualArray<test_struct> test_array =
+      dual_memory_manager.allocate<test_struct>("test_array", 10, false);
+
+  dual_memory_manager.report_memory_usage();
+
+  dual_memory_manager.free<test_struct>(test_array);
+
+  dual_memory_manager.report_memory_usage();
+
+  REQUIRE(true);
+}
