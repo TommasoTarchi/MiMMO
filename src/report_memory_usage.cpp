@@ -22,8 +22,10 @@ void DualMemoryManager::report_memory_usage(void) {
 
   label_col_width += 4;
 
-  size_t size_col_width = 10;
-  size_t on_device_col_width = 10;
+  const size_t size_col_width =
+      std::max(size_header.length() + 4, static_cast<size_t>(10));
+  const size_t on_device_col_width =
+      std::max(on_device_header.length(), static_cast<size_t>(10));
 
   /* define graphic separators */
   const std::string big_separator =
@@ -34,7 +36,7 @@ void DualMemoryManager::report_memory_usage(void) {
       "\n";
 
   /* print header */
-  std::cout << big_separator;
+  std::cout << "\n" << big_separator;
   std::cout << "DualMemoryManager Report:\n";
   std::cout << small_separator;
   std::cout << std::left << std::setw(label_col_width) << label_header
@@ -53,8 +55,8 @@ void DualMemoryManager::report_memory_usage(void) {
     std::cout << std::left << std::setw(label_col_width) << label
               << std::setw(size_col_width) << size
               << std::setw(on_device_col_width) << on_device << "\n";
-    std::cout << big_separator;
   }
+  std::cout << big_separator << "\n";
 
   return;
 }
