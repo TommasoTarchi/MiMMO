@@ -4,7 +4,9 @@
 
 #include "../private/abort_manager.hpp"
 #include "../private/memory_tracker.hpp"
+#ifdef _OPENACC
 #include <openacc.h>
+#endif // _OPENACC
 
 namespace DualMemoryManager {
 
@@ -17,6 +19,8 @@ template <typename T> struct DualArray {
   size_t size;
 };
 
+// TODO: consider if instead of ifdef's it would be better to template
+//       the class over a bool telling whether GPU is used or not
 // TODO: separate methods definitions from their declarations (use .incl
 //       files if needed)
 // TODO: add description
@@ -45,6 +49,7 @@ public:
     /* allocate memory on host */
     dual_array.host_ptr = (T *)std::malloc(num_elements * sizeof(T));
 
+#ifdef _OPENACC
     /* if required, allocate memory on device */
     if (on_device) {
       dual_array.dev_ptr = (T *)acc_malloc(num_elements * sizeof(T));
@@ -57,6 +62,9 @@ public:
     } else {
       dual_array.dev_ptr = nullptr;
     }
+#else
+    dual_array.dev_ptr = nullptr;
+#endif // _OPENACC
 
     /* update array label */
     dual_array.label = label;
@@ -70,12 +78,14 @@ public:
     const bool ret_host =
         add_to_memory_tracker(host_memory_tracker, label, dual_array.size);
 
-    bool ret_device;
+    bool ret_device = false;
+#ifdef _OPENACC
     if (on_device) {
       total_device_memory += dual_array.size;
       ret_device =
           add_to_memory_tracker(device_memory_tracker, label, dual_array.size);
     }
+#endif // _OPENACC
 
     if (ret_host || ret_device)
       abort_manager(label + " already exists. Please choose another label.");
@@ -103,6 +113,7 @@ public:
     std::free(dual_array.host_ptr);
     dual_array.host_ptr = nullptr;
 
+#ifdef _OPENACC
     if (dual_array.dev_ptr != nullptr) {
       /* free memory on device */
       acc_free(dual_array.dev_ptr);
@@ -117,6 +128,7 @@ public:
       }
       total_device_memory -= dual_array.size;
     }
+#endif // _OPENACC
   }
 
   // TODO: add description
