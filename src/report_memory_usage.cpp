@@ -5,7 +5,7 @@
  * (memory tracker, total memory, ...).
  */
 
-#include "../include/dual_memory_manager/dual_memory_manager.hpp"
+#include "../include/dual_memory_manager/api.hpp"
 #include <iomanip>
 #include <iostream>
 
