@@ -14,20 +14,38 @@
 
 namespace DualMemoryManager {
 
-// TODO: add description and comments
+/**
+ * @brief Stores dual array data.
+ *
+ * @details
+ * This struct contains all needed information related to a dual
+ * array, i.e. the couple host pointer-device pointer.
+ *
+ * @tparam T Type of elements in the array.
+ */
 template <typename T> struct DualArray {
-  T *host_ptr;
-  T *dev_ptr;
-  std::string label;
-  size_t num_elements;
-  size_t size;
+  T *host_ptr;         /*!< pointer to host memory */
+  T *dev_ptr;          /*!< pointer to device memory */
+  std::string label;   /*!< label for memory tracker */
+  size_t num_elements; /*!< number of elements in the array */
+  size_t size;         /*!< size in bytes of the array */
 };
 
+// TODO: add methods for copying data host-to-device and vice versa
 // TODO: separate methods definitions from their declarations (use .incl
 //       files if needed)
-// TODO: add description
 // TODO: maye add alignment (either to the constructor or to the memory
 //       allocation call
+/**
+ * @brief Class for host-device memory management.
+ *
+ * @details
+ * This class can be used to manage host and device memory, using objects
+ * of type DualArray.
+ *
+ * The memory manager keeps track of allocated arrays on host and device
+ * using its tracker.
+ */
 class DualMemoryManager {
 private:
   size_t total_host_memory;   /*!< total used memory on host */
@@ -49,6 +67,8 @@ public:
    * This function allocates memory on host and (if requested) on device
    * for a certain array. It returns an object of type DualArray,
    * containing host and device pointers.
+   *
+   * @tparam T Type of elements in array to be allocated.
    *
    * @param label        Label that should be used to track the array in
    *                     memory.
@@ -119,6 +139,8 @@ public:
    *
    * If the array is not tracked (i.e. was not allocated using this
    * memory manager, or it was already freed), the program aborts.
+   *
+   * @tparam T Type of elements in array to be freed.
    *
    * @param dual_array Dual array to be freed.
    */
