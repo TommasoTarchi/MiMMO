@@ -11,7 +11,7 @@
  * @brief Simple struct for library testing.
  */
 struct test_struct {
-  float first_field;
+  double first_field;
   int second_field;
 };
 
