@@ -1,4 +1,8 @@
-// TODO: add file description
+/**
+ * @file memory_tracker.cpp
+ *
+ * @brief Implementation of functions for updating the memory tracker.
+ */
 
 #include "../include/private/memory_tracker.hpp"
 

@@ -1,4 +1,9 @@
-// TODO: add file description
+/**
+ * @file report_memory_usage.cpp
+ *
+ * @brief Implementation of functions for reporting memory usage
+ * (memory tracker, total memory, ...).
+ */
 
 #include "../include/dual_memory_manager/dual_memory_manager.hpp"
 #include <iomanip>

@@ -1,4 +1,8 @@
-// TODO: add file description
+/**
+ * @file abort_manager.cpp
+ *
+ * @brief Implementation of functions for aborting the memory manager.
+ */
 
 #include "../include/private/abort_manager.hpp"
 #include <iostream>

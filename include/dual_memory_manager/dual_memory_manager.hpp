@@ -1,4 +1,8 @@
-// TODO: add file description
+/**
+ * @file dual_memory_manager.cpp
+ *
+ * @brief Main library header with memory manager class definition.
+ */
 
 #pragma once
 

@@ -1,4 +1,8 @@
-// TODO: add file description
+/**
+ * @file abort_manager.hpp
+ *
+ * @brief Declaration of functions for aborting the memory manager.
+ */
 
 #pragma once
 

@@ -1,4 +1,8 @@
-// TODO: add file description
+/**
+ * @file memory_tracker.hpp
+ *
+ * @brief Declaration of functions for updating the memory tracker.
+ */
 
 #pragma once
 
