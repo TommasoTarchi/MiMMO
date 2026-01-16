@@ -9,6 +9,7 @@
 
 namespace MiMMO {
 
+// TODO: give more info in error if possible
 /**
  * @brief Aborts manager displaying an error message.
  *

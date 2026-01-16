@@ -80,6 +80,30 @@ public:
                         const bool on_device = false);
 
   /**
+   * @brief Copies data from host to device.
+   *
+   * @details
+   * This function copies data from host to device for a given dual array.
+   *
+   * The array must have been previously allocated on both host and device.
+   *
+   * @param dual_array Dual array to synchronize.
+   */
+  template <typename T> void copy_host_to_device(DualArray<T> dual_array);
+
+  /**
+   * @brief Copies data from device to host.
+   *
+   * @details
+   * This function copies data from device to host for a given dual array.
+   *
+   * The array must have been previously allocated on both host and device.
+   *
+   * @param dual_array Dual array to synchronize.
+   */
+  template <typename T> void copy_device_to_host(DualArray<T> dual_array);
+
+  /**
    * @brief Frees memory allocated for a given dual array.
    *
    * @details
@@ -139,4 +163,5 @@ inline T *select_ptr(DualArray<T> x) {
 /* include of templated methods definitions */
 
 #include "../private/allocate.inl"
+#include "../private/copy.inl"
 #include "../private/free.inl"
