@@ -18,17 +18,17 @@ namespace MiMMO {
  *
  * @tparam T Type of elements in array to be allocated.
  *
- * @param label        Label that should be used to track the array in
- *                     memory.
- * @param num_elements Number of elements in the array.
- * @param on_device    Whether the array should be allocated on device
- *                     as well.
+ * @param label     Label that should be used to track the array in
+ *                  memory.
+ * @param dim       Number of elements in the array.
+ * @param on_device Whether the array should be allocated on device as
+ *                  well.
  *
  * @return Allocated array in the form of an object of type DualArray.
  */
 template <typename T>
 DualArray<T> DualMemoryManager::allocate(const std::string label,
-                                         const size_t num_elements,
+                                         const size_t dim,
                                          const bool on_device) {
   DualArray<T> dual_array;
 
@@ -40,13 +40,13 @@ DualArray<T> DualMemoryManager::allocate(const std::string label,
 #endif // _OPENACC
 
   /* allocate memory on host */
-  dual_array.host_ptr = (T *)std::malloc(num_elements * sizeof(T));
+  dual_array.host_ptr = (T *)std::malloc(dim * sizeof(T));
 
   /* if required, allocate memory on device */
   if (on_device) {
 
 #ifdef _OPENACC
-    dual_array.dev_ptr = (T *)acc_malloc(num_elements * sizeof(T));
+    dual_array.dev_ptr = (T *)acc_malloc(dim * sizeof(T));
 #endif // _OPENACC
 
     if (!(dual_array.dev_ptr)) {
@@ -63,8 +63,8 @@ DualArray<T> DualMemoryManager::allocate(const std::string label,
   dual_array.label = label;
 
   /* update number of elements and bytes */
-  dual_array.num_elements = num_elements;
-  dual_array.size = num_elements * sizeof(T);
+  dual_array.dim = dim;
+  dual_array.size = dim * sizeof(T);
 
   /* update used memory and memory tracker */
   total_host_memory += dual_array.size;

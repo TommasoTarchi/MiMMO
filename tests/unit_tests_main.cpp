@@ -87,7 +87,7 @@ TEST_CASE("Size retrieving", "[mimmo]") {
   MiMMO::DualArray<int> test_array =
       memory_manager.allocate<int>("first_test_array", 10, false);
 
-  const size_t ref_dim = test_array.num_elements;
+  const size_t ref_dim = test_array.dim;
   const size_t test_dim = MIMMO_GET_DIM(test_array);
 
   REQUIRE(test_dim == ref_dim);

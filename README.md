@@ -110,7 +110,7 @@ for how to generate it).
   - `host_ptr`: pointer to array memory on host;
   - `dev_ptr`: pointer to array memory on device;
   - `label`: label used to track dual array memory;
-  - `num_elements`: number of elements in array;
+  - `dim`: number of elements in array;
   - `size`: size of array in bytes.
 
 ### Classes

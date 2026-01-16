@@ -26,11 +26,11 @@ namespace MiMMO {
  * @tparam T Type of elements in the array.
  */
 template <typename T> struct DualArray {
-  T *host_ptr;         /*!< pointer to host memory */
-  T *dev_ptr;          /*!< pointer to device memory */
-  std::string label;   /*!< label for memory tracker */
-  size_t num_elements; /*!< number of elements in the array */
-  size_t size;         /*!< size in bytes of the array */
+  T *host_ptr;       /*!< pointer to host memory */
+  T *dev_ptr;        /*!< pointer to device memory */
+  std::string label; /*!< label for memory tracker */
+  size_t dim;        /*!< number of elements in the array */
+  size_t size;       /*!< size in bytes of the array */
 };
 
 /**
@@ -67,16 +67,16 @@ public:
    *
    * @tparam T Type of elements in array to be allocated.
    *
-   * @param label        Label that should be used to track the array in
-   *                     memory.
-   * @param num_elements Number of elements in the array.
-   * @param on_device    Whether the array should be allocated on device
-   *                     as well.
+   * @param label     Label that should be used to track the array in
+   *                  memory.
+   * @param dim       Number of elements in the array.
+   * @param on_device Whether the array should be allocated on device as
+   *                  well.
    *
    * @return Allocated array in the form of an object of type DualArray.
    */
   template <typename T>
-  DualArray<T> allocate(const std::string label, const size_t num_elements,
+  DualArray<T> allocate(const std::string label, const size_t dim,
                         const bool on_device = false);
 
   /**
@@ -157,7 +157,7 @@ public:
  *
  * @param x Dual array whose dimension should be returned.
  */
-#define MIMMO_GET_DIM(x) ((x).num_elements)
+#define MIMMO_GET_DIM(x) ((x).dim)
 
 /**
  * @brief Communicates in an OpenACC pragma that a dual array is present on
