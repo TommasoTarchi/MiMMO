@@ -4,10 +4,10 @@
 
 **WARNING**: Compilation for GPU is not available with CMake yet, it will be soon.
 
-**WARNING**: This README is still to be completed
+**WARNING**: This README is still to be completed.
 
-MiMMO (Minimal Memory Manager for Openacc) is a simple, safe, easy to use CPU/GPU memory manager to work
-with OpenACC.
+**MiMMO** (Minimal Memory Manager for Openacc) is a simple, safe, easy to use CPU/GPU memory manager to
+work with OpenACC.
 
 The pragma-based approach of OpenACC is extremely useful, however it only allows for a very high-level
 management of host and device memory, and it is often confusing for those who like to understand what is
@@ -32,19 +32,71 @@ any time.
 
 ## Requirements
 
+TODO: all
+
 ## Building and Testing
+
+MiMMO can be compiled as a shared library, using CMake.
+
+To build the library and run tests, follow these steps:
+
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:TommasoTarchi/MiMMO.git
+   cd MiMMO
+   ```
+
+2. Create a build directory and compile the code:
+   ```bash
+   mkdir build
+   cmake -S . -B build
+   cmake --build build
+   ```
+   Since testing is enabled by default, the tests will also be built. If you want to avoid
+   Catch2 overhead in the building phase, you can disable tests by adding `-DUNIT_TESTS=OFF`
+   to the `cmake -S . -B build` command.
+
+3. (Optional) Run the tests:
+   ```bash
+   ctest --test-dir build --output-on-failure
+   ```
+
+The compiled library `libmimmo.so` will be located in the `build/` directory.
 
 ### Generate documentation
 
+We recommend to generate Doxygen documentation as well.
+
+This can be done, after the library has been compiled, by issuing:
+```bash
+cmake --build build --target docs
+```
+
+The generated documentation will be placed in `build/docs/`.
+
 ## Usage
 
-The library's API is contained in a namespace called `MiMMO`.
-
 The library works with so called "dual arrays", i.e. data structures containing host and device
-pointers of the array, in addition to the number of elements, the size in bytes and the label
-used by the memory manager to track the array.
+pointers of the array, in addition to the number of elements, the size in bytes and the label used
+by the memory manager to track the array.
 
-### Sample code
+To use MiMMO in your C++ project, include the header `mimmo/api.hpp` and access the functions within
+the `MiMMO` namespace. Here's a simple example:
+
+TODO: add example
+
+Compile your program linking against the MiMMO library as follows, adjusting the paths as necessary:
+```bash
+g++ -c my_program.cpp -I</path/to/MiMMO>/include
+g++ my_program.o -L</path/to/MiMMO>/build -lmimmo -o my_program
+```
+
+Before running your program, ensure that the dynamic linker can find the `libmimmo.so` library. You
+can set the `LD_LIBRARY_PATH` environment variable to include the directory where the library is
+located:
+```bash
+export LD_LIBRARY_PATH=</path/to/MiMMO>/build:$LD_LIBRARY_PATH
+```
 
 ## API Reference
 
@@ -72,10 +124,14 @@ of them, please see the Doxygen documentation (see #generate-documentation for h
 
 ### Functions
 
-- `select_ptr()`: function returning the host or device pointer of a dual array depending on
-  whether OpenACC is enabled or not; it is thought to be used inside compute regions, to make
-  code cleaner and avoid #ifdef's.
+- `select_ptr()`: function returning the host or device pointer of a dual array depending on whether
+  OpenACC is enabled or not; it is thought to be used inside compute regions to make code cleaner and
+  avoid #ifdef's.
 
 ## Contributing
 
+TODO: all
+
 ## License
+
+TODO: all
