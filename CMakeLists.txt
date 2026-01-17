@@ -8,12 +8,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ### compile library ###
 
-# define shared library
+# define shared library with source files
 add_library(MiMMO SHARED
     src/abort_manager.cpp
     src/memory_tracker.cpp
     src/report_memory_usage.cpp
 )
+
+# enable OpenACC
+option(OPENACC "Enable OpenACC" ON)
+
+if(OPENACC)
+    # check compiler support
+    if(NOT CMAKE_CXX_COMPILER_ID MATCHES "NVHPC")
+        message(FATAL_ERROR "For OpenACC make sure the NVIDIA compiler is available and set CXX=nvc++")
+    endif()
+
+    # find package
+    find_package(OpenACC REQUIRED)
+
+    # link library
+    target_link_libraries(${arg1} PRIVATE OpenACC::OpenACC_CXX)
+
+    # TODO: maybe add custom compile options (ACCFLAGS for instance)
+endif()
 
 # include directories
 target_include_directories(MiMMO PUBLIC 

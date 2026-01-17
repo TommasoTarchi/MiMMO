@@ -18,7 +18,7 @@ jobs:
           extra_args: --all-files
 
       - name: Configure CMake
-        run: cmake -S . -B build
+        run: cmake -S . -B build -DOPENACC=OFF
 
       - name: Build
         run: cmake --build build
