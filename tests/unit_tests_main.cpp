@@ -213,7 +213,7 @@ TEST_CASE("Present macro for pragma test", "[mimmo]") {
   {
 #pragma acc loop
     for (int i = 0; i < MIMMO_GET_DIM(test_array); i++)
-      MIMMO_GET_PTR(test_array)[i] * 10;
+      MIMMO_GET_PTR(test_array)[i] *= 10;
   }
 
   memory_manager.copy_device_to_host(test_array);

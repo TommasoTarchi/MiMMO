@@ -32,24 +32,9 @@ any time.
 
 ## Requirements
 
-## Requirements
-
-### Mandatory
-- **CMake ≥ 3.15**
-- **C++17–compatible compiler**
-
-### Optional
-#### OpenACC support (enabled by default)
-- **NVIDIA HPC SDK (NVHPC)** with `nvc++` compiler
-- **OpenACC** CMake package  
-  *(Disable with `-DOPENACC=OFF`)*
-
-#### Unit tests (enabled by default)
-- **Catch2 v3.4.0** (automatically downloaded via CMake FetchContent)  
-  *(Disable with `-DUNIT_TESTS=OFF`)*
-
-#### Documentation
-- **Doxygen** (required only to generate API documentation)
+- **CMake**: at least version 3.15
+- **NVIDIA HPC SDK (NVHPC)**: at least version 21.7 (25.x recommended)
+- **Doxygen** (optional: required to generate API documentation)
 
 ## Building and Testing
 
@@ -105,6 +90,7 @@ the `MiMMO` namespace; macros, instead, always begin with `MIMMO_`.
 Here's a very simple example of C++ code using the library:
 ```c++
 #include <iostream>
+#include <openacc.h>
 #include "mimmo/api.hpp"
 
 #define DIM 5
@@ -114,14 +100,14 @@ int main() {
   MiMMO::DualMemoryManager dual_memory_manager = MiMMO::DualMemoryManager();
 
   /* instantiate a dual array */
-  MiMMO::DualArray<int> dual_array = memory_manager.allocate<int>("dual_array", DIM, true);
+  MiMMO::DualArray<int> dual_array = dual_memory_manager.allocate<int>("dual_array", DIM, true);
 
   /* initialize host array */
   for (int i = 0; i < dual_array.dim; i++)
     dual_array.host_ptr[i] = i;
 
   /* copy data to device */
-  memory_manager.copy_host_to_device(dual_array);
+  dual_memory_manager.copy_host_to_device(dual_array);
 
   /* OpenACC compute region */
 #pragma acc parallel MIMMO_PRESENT(dual_array)
@@ -129,19 +115,19 @@ int main() {
     /* perform calculation on device */
 #pragma acc loop
     for (int i = 0; i < MIMMO_GET_DIM(dual_array); i++)
-      MIMMO_GET_PTR(dual_array)[i] * 10;
+      MIMMO_GET_PTR(dual_array)[i] *= 10;
   }
 
   /* copy data to host */
-  memory_manager.copy_device_to_host(dual_array);
+  dual_memory_manager.copy_device_to_host(dual_array);
 
   /* print updated values in array */
   for (int i = 0; i < dual_array.dim; i++)
-      std::cout << dual_array.host_array[i] << "  ";
+      std::cout << dual_array.host_ptr[i] << "  ";
   std::cout << std::endl;
 
   /* free dual array memory */
-  memory_manager.free(dual_array);
+  dual_memory_manager.free(dual_array);
 
   return 0;
 }
@@ -149,8 +135,8 @@ int main() {
 
 Compile your program linking against the MiMMO library as follows, adjusting the paths as necessary:
 ```bash
-g++ -c my_program.cpp -I</path/to/MiMMO>/include
-g++ my_program.o -L</path/to/MiMMO>/build -lmimmo -o my_program
+nvc++ -c my_program.cpp -I</path/to/MiMMO>/include
+nvc++ my_program.o -L</path/to/MiMMO>/build -lmimmo -o my_program
 ```
 
 Before running your program, ensure that the dynamic linker can find the `libmimmo.so` library. You
