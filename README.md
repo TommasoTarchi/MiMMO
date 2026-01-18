@@ -32,7 +32,24 @@ any time.
 
 ## Requirements
 
-TODO
+## Requirements
+
+### Mandatory
+- **CMake ≥ 3.15**
+- **C++17–compatible compiler**
+
+### Optional
+#### OpenACC support (enabled by default)
+- **NVIDIA HPC SDK (NVHPC)** with `nvc++` compiler
+- **OpenACC** CMake package  
+  *(Disable with `-DOPENACC=OFF`)*
+
+#### Unit tests (enabled by default)
+- **Catch2 v3.4.0** (automatically downloaded via CMake FetchContent)  
+  *(Disable with `-DUNIT_TESTS=OFF`)*
+
+#### Documentation
+- **Doxygen** (required only to generate API documentation)
 
 ## Building and Testing
 
