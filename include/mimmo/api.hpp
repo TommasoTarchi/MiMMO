@@ -7,7 +7,6 @@
 #pragma once
 
 #include "../private/abort_manager.hpp"
-#include "../private/helper_macros.hpp"
 #include "../private/memory_tracker.hpp"
 #ifdef _OPENACC
 #include <openacc.h>
@@ -182,30 +181,6 @@ public:
 #define MIMMO_PRESENT(x) deviceptr(x.dev_ptr)
 #else
 #define MIMMO_PRESENT(x) ()
-#endif
-
-/**
- * @brief Defines an OpenACC parallel region, compatible with MiMMO.
- *
- * @details
- * This macro defines an OpenACC parallel region compatible with other MiMMO
- * macros. In a project using MiMMO, it should be used in place of standard
- * OpenACC "#pragma acc parallel".
- *
- * The presence of MiMMO dual arrays on device should be communicated to the
- * region using the MIMMO_PRESENT() macro.
- *
- * Other desired (valid) OpenACC clauses should be passed as arguments to this
- * macro.
- *
- * @param ... Clauses for parallel region (must be OpenACC valid clauses or
- *            MIMMO_PRESENT() macro).
- */
-#ifdef _OPENACC
-#define MIMMO_PARALLEL_REGION(...)                                             \
-  _Pragma(MIMMO_STRINGIFY(acc parallel __VA_ARGS__))
-#else
-#define MIMMO_PARALLEL_REGION(...) ()
 #endif
 
 /* include of templated methods definitions */

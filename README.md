@@ -177,7 +177,7 @@ for how to generate it).
   it is thought to be used inside OpenACC compute regions.
 - `MIMMO_GET_DIM()`: returns the dimension (i.e. the number of elements) of a dual array.
 - `MIMMO_PRESENT()`: communicates inside a pragma decorating a compute region that the data of a
-  dual array are already present on device; also copies the array dimension to device.
+  dual array are already present on device.
 
 ## Contributing
 
