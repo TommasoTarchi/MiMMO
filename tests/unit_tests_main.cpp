@@ -195,7 +195,7 @@ TEST_CASE("Memcopy", "[mimmo]") {
 /**
  * @brief Present macro test for OpenACC pragmas.
  */
-TEST_CASE("Present macro for pragma test", "[mimmo]") {
+TEST_CASE("Parallel region macros test", "[mimmo]") {
   MiMMO::DualMemoryManager memory_manager = MiMMO::DualMemoryManager();
 
   MiMMO::DualArray<int> test_array =
@@ -209,8 +209,7 @@ TEST_CASE("Present macro for pragma test", "[mimmo]") {
   for (int i = 0; i < 5; i++)
     test_array.host_ptr[i] += 1;
 
-#pragma acc parallel MIMMO_PRESENT(test_array)
-  {
+  MIMMO_PARALMIMMO_PARALLEL_REGION(MIMMO_PRESENT(test_array)) {
 #pragma acc loop
     for (int i = 0; i < MIMMO_GET_DIM(test_array); i++)
       MIMMO_GET_PTR(test_array)[i] *= 10;
