@@ -170,8 +170,7 @@ public:
  * device.
  *
  * Internally, the macro communicates that the device pointer of the dual
- * array is actually a device pointer, and copies the size of the array to
- * device.
+ * array is actually a device pointer.
  *
  * Warning: there is no corresponding macro for copy on purpose, since all data
  * movements of dual arrays are expected to be performed using methods of
@@ -180,8 +179,7 @@ public:
  * @param x Dual array present on device.
  */
 #ifdef _OPENACC
-#define MIMMO_PRESENT(x)                                                       \
-  deviceptr(MIMMO_GET_PTR(x)[0:MIMMO_GET_DIM(x)]) copy(MIMMO_GET_DIM(x))
+#define MIMMO_PRESENT(x) deviceptr(MIMMO_GET_PTR(x))
 #else
 #define MIMMO_PRESENT(x) ()
 #endif
