@@ -87,56 +87,12 @@ by the memory manager to track the array.
 To use MiMMO in your C++ project, include the header `mimmo/api.hpp` and access the functions within
 the `MiMMO` namespace; macros, instead, always begin with `MIMMO_`.
 
-Here's a very simple example of C++ code using the library:
-```c++
-#include <iostream>
-#include <openacc.h>
-#include "mimmo/api.hpp"
-
-#define DIM 5
-
-int main() {
-  /* instantiate a dual memory manager */
-  MiMMO::DualMemoryManager dual_memory_manager = MiMMO::DualMemoryManager();
-
-  /* instantiate a dual array */
-  MiMMO::DualArray<int> dual_array = dual_memory_manager.allocate<int>("dual_array", DIM, true);
-
-  /* initialize host array */
-  for (int i = 0; i < dual_array.dim; i++)
-    dual_array.host_ptr[i] = i;
-
-  /* copy data to device */
-  dual_memory_manager.copy_host_to_device(dual_array);
-
-  /* OpenACC compute region */
-#pragma acc parallel MIMMO_PRESENT(dual_array)
-  {
-    /* perform calculation on device */
-#pragma acc loop
-    for (int i = 0; i < MIMMO_GET_DIM(dual_array); i++)
-      MIMMO_GET_PTR(dual_array)[i] *= 10;
-  }
-
-  /* copy data to host */
-  dual_memory_manager.copy_device_to_host(dual_array);
-
-  /* print updated values in array */
-  for (int i = 0; i < dual_array.dim; i++)
-      std::cout << dual_array.host_ptr[i] << "  ";
-  std::cout << std::endl;
-
-  /* free dual array memory */
-  dual_memory_manager.free(dual_array);
-
-  return 0;
-}
-```
+Examples of working OpenACC programs using MiMMO can ve found in the [examples folder](./examples/).
 
 Compile your program linking against the MiMMO library as follows, adjusting the paths as necessary:
 ```bash
-nvc++ -c my_program.cpp -I</path/to/MiMMO>/include
-nvc++ my_program.o -L</path/to/MiMMO>/build -lmimmo -o my_program
+nvc++ -acc -Minfo=all -c my_program.cpp -I</path/to/MiMMO>/include
+nvc++ -acc -Minfo=all my_program.o -L</path/to/MiMMO>/build -lmimmo -o my_program
 ```
 
 Before running your program, ensure that the dynamic linker can find the `libmimmo.so` library. You
