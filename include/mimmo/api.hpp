@@ -179,7 +179,7 @@ public:
  * @param x Dual array present on device.
  */
 #ifdef _OPENACC
-#define MIMMO_PRESENT(x) deviceptr(MIMMO_GET_PTR(x))
+#define MIMMO_PRESENT(x) deviceptr((x).dev_ptr)
 #else
 #define MIMMO_PRESENT(x) ()
 #endif
@@ -205,7 +205,7 @@ public:
 #define MIMMO_PARALLEL_REGION(...)                                             \
   _Pragma(MIMMO_STRINGIFY(acc parallel __VA_ARGS__))
 #else
-#define MIMMO_PARALLEL_REGION(x) ()
+#define MIMMO_PARALLEL_REGION(...) ()
 #endif
 
 /* include of templated methods definitions */
