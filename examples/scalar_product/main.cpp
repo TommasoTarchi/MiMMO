@@ -1,16 +1,16 @@
 /**
- * @file scalar_prod.cpp
+ * @file main.cpp
  *
  * @brief Very simple example of scalar product between two arrays performed
  * on device using MiMMO's memory manager.
  *
  * @details
  * To compile and run use:
- * - nvc++ -acc -Minfo=all -c scalar_prod.cpp -I</path/to/MiMMO>/include
- * - nvc++ -acc -Minfo=all scalar_prod.o -L</path/to/MiMMO>/build -lmimmo -o
- * scalar_prod.x
+ * - nvc++ -acc -Minfo=all -c main.cpp -I</path/to/MiMMO>/include
+ * - nvc++ -acc -Minfo=all main.o -L</path/to/MiMMO>/build -lmimmo -o
+ * main.x
  * - export LD_LIBRARY_PATH=</path/to/MiMMO>/build:$LD_LIBRARY_PATH
- * - ./scalar_prod.x
+ * - ./main.x
  */
 
 #include "mimmo/api.hpp"
@@ -58,7 +58,7 @@ int main() {
   /* copy result to host */
   dual_memory_manager.copy_device_to_host(dual_array_res);
 
-  /* print updated values in array */
+  /* print results of operation */
   std::cout << "Result array:  [";
   std::cout << dual_array_res.host_ptr[0];
   for (int i = 1; i < MIMMO_GET_DIM(dual_array_res); i++)
