@@ -61,23 +61,6 @@ TEST_CASE("Memory manager - struct - No device", "[mimmo]") {
   REQUIRE(true);
 }
 
-/**
- * @brief Size retrieving macro test without GPU support.
- */
-TEST_CASE("Size retrieving", "[mimmo]") {
-  MiMMO::DualMemoryManager memory_manager = MiMMO::DualMemoryManager();
-
-  MiMMO::DualArray<int> test_array =
-      memory_manager.allocate<int>("test_array", 10, false);
-
-  const size_t ref_dim = test_array.dim;
-  const size_t test_dim = MIMMO_GET_DIM(test_array);
-
-  REQUIRE(test_dim == ref_dim);
-
-  memory_manager.free(test_array);
-}
-
 #ifdef _OPENACC
 /**
  * @brief Memory manager test using basic types ('int' and 'float') with GPU
@@ -199,7 +182,7 @@ TEST_CASE("Present macro test", "[mimmo]") {
 #pragma acc parallel MIMMO_PRESENT(test_array)
   {
 #pragma acc loop
-    for (int i = 0; i < MIMMO_GET_DIM(test_array); i++)
+    for (int i = 0; i < test_array.dim; i++)
       MIMMO_GET_PTR(test_array)[i] *= 10;
   }
 

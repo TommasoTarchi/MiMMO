@@ -153,13 +153,6 @@ public:
 #endif
 
 /**
- * @brief Returns the dimension (i.e. number of elements) of a dual array.
- *
- * @param x Dual array whose dimension should be returned.
- */
-#define MIMMO_GET_DIM(x) x.dim
-
-/**
  * @brief Communicates in an OpenACC pragma that a dual array is present on
  * device and copies its size to device.
  *

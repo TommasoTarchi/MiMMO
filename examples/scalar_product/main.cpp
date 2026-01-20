@@ -42,7 +42,7 @@ int main() {
   {
     /* perform calculation on device */
 #pragma acc loop
-    for (int i = 0; i < MIMMO_GET_DIM(dual_array_1); i++)
+    for (int i = 0; i < dual_array_1.dim; i++)
       MIMMO_GET_PTR(dual_array_res)
     [i] = MIMMO_GET_PTR(dual_array_1)[i] * MIMMO_GET_PTR(dual_array_2)[i];
   }
@@ -53,7 +53,7 @@ int main() {
   /* print results of operation */
   std::cout << "Result array:  [";
   std::cout << dual_array_res.host_ptr[0];
-  for (int i = 1; i < MIMMO_GET_DIM(dual_array_res); i++)
+  for (int i = 1; i < dual_array_res.dim; i++)
     std::cout << ",  " << dual_array_res.host_ptr[i];
   std::cout << "]";
   std::cout << std::endl;

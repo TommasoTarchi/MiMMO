@@ -30,7 +30,7 @@ int main() {
 #pragma acc parallel MIMMO_PRESENT(global_array) default(none)
   {
 #pragma acc loop
-    for (int i = 0; i < MIMMO_GET_DIM(global_array); i++)
+    for (int i = 0; i < global_array.dim; i++)
       MIMMO_GET_PTR(global_array)[i] *= 10;
   }
 
@@ -40,7 +40,7 @@ int main() {
   /* print final results */
   std::cout << "Result array:  [";
   std::cout << global_array.host_ptr[0];
-  for (int i = 1; i < MIMMO_GET_DIM(global_array); i++)
+  for (int i = 1; i < global_array.dim; i++)
     std::cout << ",  " << global_array.host_ptr[i];
   std::cout << "]";
   std::cout << std::endl;
