@@ -169,16 +169,20 @@ public:
  * device.
  *
  * Internally, the macro communicates that the device pointer of the dual
- * array is actually a device pointer.
+ * array is actually a device pointer, and temporarily copies the structure
+ * corresponding to the dual array to device.
  *
- * Warning: there is no corresponding macro for copy on purpose, since all data
- * movements of dual arrays are expected to be performed using methods of
+ * **Notice**: it takes only one argument in input; if you need to use it on
+ * multiple arrays within the same pragma, use multiple calls to the macro.
+ *
+ * **Notice**: there is no corresponding macro for copy on purpose, since all
+ * data movements of dual arrays are expected to be performed using methods of
  * DualMemoryManager.
  *
  * @param x Dual array present on device.
  */
 #ifdef _OPENACC
-#define MIMMO_PRESENT(x) deviceptr(x.dev_ptr)
+#define MIMMO_PRESENT(x) copy(x) deviceptr(x.dev_ptr)
 #else
 #define MIMMO_PRESENT(x) ()
 #endif
