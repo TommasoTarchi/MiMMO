@@ -22,25 +22,41 @@ struct test_struct {
 TEST_CASE("Memory manager - base types - No device", "[mimmo]") {
   MiMMO::DualMemoryManager memory_manager = MiMMO::DualMemoryManager();
 
+  const size_t first_size = 10 * sizeof(int);
+  const size_t second_size = 20 * sizeof(float);
+
   MiMMO::DualArray<int> first_test_array =
       memory_manager.allocate<int>("first_test_array", 10, false);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_1 =
+      memory_manager.return_total_memory_usage();
 
   MiMMO::DualArray<float> second_test_array =
       memory_manager.allocate<float>("second_test_array", 20, false);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_2 =
+      memory_manager.return_total_memory_usage();
 
   memory_manager.free(first_test_array);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_3 =
+      memory_manager.return_total_memory_usage();
 
   memory_manager.free(second_test_array);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_4 =
+      memory_manager.return_total_memory_usage();
 
-  REQUIRE(true);
+  REQUIRE((tot_mem_usage_1.first == first_size && tot_mem_usage_1.second == 0 &&
+           tot_mem_usage_2.first == (first_size + second_size) &&
+           tot_mem_usage_2.second == 0 &&
+           tot_mem_usage_3.first == second_size &&
+           tot_mem_usage_3.second == 0 && tot_mem_usage_4.first == 0 &&
+           tot_mem_usage_4.second == 0));
 }
 
 /**
@@ -49,16 +65,23 @@ TEST_CASE("Memory manager - base types - No device", "[mimmo]") {
 TEST_CASE("Memory manager - struct - No device", "[mimmo]") {
   MiMMO::DualMemoryManager memory_manager = MiMMO::DualMemoryManager();
 
+  const size_t size = 10 * sizeof(test_struct);
+
   MiMMO::DualArray<test_struct> test_array =
       memory_manager.allocate<test_struct>("test_array", 10, false);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_1 =
+      memory_manager.return_total_memory_usage();
 
   memory_manager.free(test_array);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_2 =
+      memory_manager.return_total_memory_usage();
 
-  REQUIRE(true);
+  REQUIRE((tot_mem_usage_1.first == size && tot_mem_usage_1.second == 0 &&
+           tot_mem_usage_2.first == 0 && tot_mem_usage_2.second == 0));
 }
 
 #ifdef _OPENACC
@@ -69,25 +92,42 @@ TEST_CASE("Memory manager - struct - No device", "[mimmo]") {
 TEST_CASE("Memory manager - base types", "[mimmo]") {
   MiMMO::DualMemoryManager memory_manager = MiMMO::DualMemoryManager();
 
+  const size_t first_size = 10 * sizeof(int);
+  const size_t second_size = 20 * sizeof(float);
+
   MiMMO::DualArray<int> first_test_array =
       memory_manager.allocate<int>("first_test_array", 10, true);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_1 =
+      memory_manager.return_total_memory_usage();
 
   MiMMO::DualArray<float> second_test_array =
       memory_manager.allocate<float>("second_test_array", 20, false);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_2 =
+      memory_manager.return_total_memory_usage();
 
   memory_manager.free(first_test_array);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_3 =
+      memory_manager.return_total_memory_usage();
 
   memory_manager.free(second_test_array);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_4 =
+      memory_manager.return_total_memory_usage();
 
-  REQUIRE(true);
+  REQUIRE((tot_mem_usage_1.first == first_size &&
+           tot_mem_usage_1.second == first_size &&
+           tot_mem_usage_2.first == (first_size + second_size) &&
+           tot_mem_usage_2.second == first_size &&
+           tot_mem_usage_3.first == second_size &&
+           tot_mem_usage_3.second == 0 && tot_mem_usage_4.first == 0 &&
+           tot_mem_usage_4.second == 0));
 }
 
 /**
@@ -96,16 +136,23 @@ TEST_CASE("Memory manager - base types", "[mimmo]") {
 TEST_CASE("Memory manager - struct", "[mimmo]") {
   MiMMO::DualMemoryManager memory_manager = MiMMO::DualMemoryManager();
 
+  const size_t size = 10 * sizeof(test_struct);
+
   MiMMO::DualArray<test_struct> test_array =
       memory_manager.allocate<test_struct>("test_array", 10, true);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_1 =
+      memory_manager.return_total_memory_usage();
 
   memory_manager.free(test_array);
 
   memory_manager.report_memory_usage();
+  const std::pair<size_t, size_t> tot_mem_usage_2 =
+      memory_manager.return_total_memory_usage();
 
-  REQUIRE(true);
+  REQUIRE((tot_mem_usage_1.first == size && tot_mem_usage_1.second == size &&
+           tot_mem_usage_2.first == 0 && tot_mem_usage_2.second == 0));
 }
 
 /**

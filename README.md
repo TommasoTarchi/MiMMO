@@ -125,6 +125,7 @@ for how to generate it).
   - `copy_host_to_device()`: copies the array data from host to device;
   - `copy_device_to_host()`: copies the array data from device to host;
   - `free()`: frees both host and device memory;
+  - `return_total_memory_usage()`: returns the total amount of memory used on host and device;
   - `report_memory_usage()`: prints a report of memory usage for both host and device.
 
 ### Helper macros

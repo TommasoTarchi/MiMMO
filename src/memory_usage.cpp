@@ -1,5 +1,5 @@
 /**
- * @file report_memory_usage.cpp
+ * @file memory_usage.cpp
  *
  * @brief Implementation of functions for reporting memory usage
  * (memory tracker, total memory, ...).
@@ -10,6 +10,24 @@
 #include <iostream>
 
 namespace MiMMO {
+
+/**
+ * @brief Returns the total host and device memory allocated by
+ * the memory manager.
+ *
+ * @details
+ * This function returns a pair where the elements are the total
+ * memory allocated on host and device, respectively.
+ *
+ * @return (total host memory used, total device memory used)
+ */
+std::pair<size_t, size_t> DualMemoryManager::return_total_memory_usage() {
+  /* build return pair (used host and device memory) */
+  const std::pair<size_t, size_t> memory_usage(total_host_memory,
+                                               total_device_memory);
+
+  return memory_usage;
+}
 
 /**
  * @brief Reports memory used by the memory manager.

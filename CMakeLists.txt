@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(MiMMO SHARED
     src/abort_manager.cpp
     src/memory_tracker.cpp
-    src/report_memory_usage.cpp
+    src/memory_usage.cpp
 )
 
 # enable OpenACC
