@@ -16,7 +16,8 @@ int main() {
   global_array_size = 10;
 
   /* allocate memory for global array */
-  memory_manager.allocate<int>("global_array", global_array_size, true);
+  global_array =
+      memory_manager.allocate<int>("global_array", global_array_size, true);
 
   /* initialize array on host */
   for (int i = 0; i < global_array_size; i++)

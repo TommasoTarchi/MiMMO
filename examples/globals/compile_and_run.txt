@@ -1,6 +1,6 @@
 To compile and run the example use:
-- nvc++ -acc -Minfo=all -c main.cpp -I/home/tarchi/MiMMO/include
-- nvc++ -acc -Minfo=all -c allvars.cpp -I/home/tarchi/MiMMO/include
-- nvc++ -acc -Minfo=all main.o allvars.o -L/home/tarchi/MiMMO/build -lmimmo -o main.x
-- export LD_LIBRARY_PATH=/home/tarchi/MiMMO/build:$LD_LIBRARY_PATH
+- nvc++ -acc -Minfo=all -c main.cpp -I</path/to/MiMMO>/include
+- nvc++ -acc -Minfo=all -c allvars.cpp -I</path/to/MiMMO>/include
+- nvc++ -acc -Minfo=all main.o allvars.o -L</path/to/MiMMO>/build -lmimmo -o main.x
+- export LD_LIBRARY_PATH=</path/to/MiMMO>/build:$LD_LIBRARY_PATH
 - ./main.x
