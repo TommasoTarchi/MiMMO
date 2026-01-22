@@ -137,7 +137,7 @@ TEST_CASE("Memcopy", "[mimmo]") {
     test_array_copy.host_ptr[i] = i;
   }
 
-  memory_manager.copy_host_to_device(test_array);
+  memory_manager.copy_host_to_device(test_array, 0, test_array.dim);
 
 #pragma acc parallel deviceptr(test_array.dev_ptr)
   {
@@ -146,13 +146,57 @@ TEST_CASE("Memcopy", "[mimmo]") {
       MIMMO_GET_PTR(test_array)[i] *= 10;
   }
 
-  memory_manager.copy_device_to_host(test_array);
+  memory_manager.copy_device_to_host(test_array, 0, test_array.dim);
 
   REQUIRE(((test_array.host_ptr[0] == test_array_copy.host_ptr[0] * 10) &&
            (test_array.host_ptr[1] == test_array_copy.host_ptr[1] * 10) &&
            (test_array.host_ptr[2] == test_array_copy.host_ptr[2] * 10) &&
            (test_array.host_ptr[3] == test_array_copy.host_ptr[3] * 10) &&
            (test_array.host_ptr[4] == test_array_copy.host_ptr[4] * 10)));
+
+  memory_manager.free(test_array);
+}
+
+/**
+ * @brief Partial memory movements test (host-to-device and device-to-host).
+ */
+TEST_CASE("Memcopy - partial copy", "[mimmo]") {
+  MiMMO::DualMemoryManager memory_manager = MiMMO::DualMemoryManager();
+
+  MiMMO::DualArray<int> test_array =
+      memory_manager.allocate<int>("test_array", 5, true);
+  MiMMO::DualArray<int> test_array_copy =
+      memory_manager.allocate<int>("test_array_copy", 5, true);
+
+  for (int i = 0; i < 5; i++) {
+    test_array.host_ptr[i] = i;
+    test_array_copy.host_ptr[i] = i;
+  }
+
+  memory_manager.copy_host_to_device(test_array, 0, test_array.dim);
+
+#pragma acc parallel deviceptr(test_array.dev_ptr)
+  {
+#pragma acc loop
+    for (int i = 0; i < 5; i++)
+      MIMMO_GET_PTR(test_array)[i] *= 10;
+  }
+
+  memory_manager.copy_device_to_host(test_array, 0, 3);
+
+#ifdef _OPENACC
+  REQUIRE(((test_array.host_ptr[0] == test_array_copy.host_ptr[0] * 10) &&
+           (test_array.host_ptr[1] == test_array_copy.host_ptr[1] * 10) &&
+           (test_array.host_ptr[2] == test_array_copy.host_ptr[2] * 10) &&
+           (test_array.host_ptr[3] == test_array_copy.host_ptr[3]) &&
+           (test_array.host_ptr[4] == test_array_copy.host_ptr[4])));
+#else
+  REQUIRE(((test_array.host_ptr[0] == test_array_copy.host_ptr[0] * 10) &&
+           (test_array.host_ptr[1] == test_array_copy.host_ptr[1] * 10) &&
+           (test_array.host_ptr[2] == test_array_copy.host_ptr[2] * 10) &&
+           (test_array.host_ptr[3] == test_array_copy.host_ptr[3] * 10) &&
+           (test_array.host_ptr[4] == test_array_copy.host_ptr[4] * 10)));
+#endif // _OPENACC
 
   memory_manager.free(test_array);
 }
@@ -169,7 +213,7 @@ TEST_CASE("Present macro test", "[mimmo]") {
   for (int i = 0; i < 5; i++)
     test_array.host_ptr[i] = i;
 
-  memory_manager.copy_host_to_device(test_array);
+  memory_manager.copy_host_to_device(test_array, 0, test_array.dim);
 
   for (int i = 0; i < 5; i++)
     test_array.host_ptr[i] += 1;
@@ -181,7 +225,7 @@ TEST_CASE("Present macro test", "[mimmo]") {
       MIMMO_GET_PTR(test_array)[i] *= 10;
   }
 
-  memory_manager.copy_device_to_host(test_array);
+  memory_manager.copy_device_to_host(test_array, 0, test_array.dim);
 
 #ifdef _OPENACC
   REQUIRE((test_array.host_ptr[0] == 0 && test_array.host_ptr[1] == 10 &&
