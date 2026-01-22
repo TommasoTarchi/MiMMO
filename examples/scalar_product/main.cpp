@@ -33,8 +33,8 @@ int main() {
   }
 
   /* copy needed data to device */
-  dual_memory_manager.copy_host_to_device(dual_array_1);
-  dual_memory_manager.copy_host_to_device(dual_array_2);
+  dual_memory_manager.copy_host_to_device(dual_array_1, 0, dual_array_1.dim);
+  dual_memory_manager.copy_host_to_device(dual_array_2, 0, dual_array_2.dim);
 
   /* OpenACC compute region */
 #pragma acc parallel MIMMO_PRESENT(dual_array_1) MIMMO_PRESENT(dual_array_2)   \
@@ -48,7 +48,8 @@ int main() {
   }
 
   /* copy result to host */
-  dual_memory_manager.copy_device_to_host(dual_array_res);
+  dual_memory_manager.copy_device_to_host(dual_array_res, 0,
+                                          dual_array_res.dim);
 
   /* print results of operation */
   std::cout << "Result array:  [";

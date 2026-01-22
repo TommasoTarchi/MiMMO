@@ -87,9 +87,13 @@ public:
    *
    * The array must have been previously allocated on both host and device.
    *
-   * @param dual_array Dual array to synchronize.
+   * @param dual_array   Dual array to synchronize.
+   * @param offset       Index of first element to be copied.
+   * @param num_elements Number of elements to be copied.
    */
-  template <typename T> void copy_host_to_device(DualArray<T> dual_array);
+  template <typename T>
+  void copy_host_to_device(DualArray<T> dual_array, const size_t offset,
+                           const size_t num_elements);
 
   /**
    * @brief Copies data from device to host.
@@ -99,9 +103,13 @@ public:
    *
    * The array must have been previously allocated on both host and device.
    *
-   * @param dual_array Dual array to synchronize.
+   * @param dual_array   Dual array to synchronize.
+   * @param offset       Index of first element to be copied.
+   * @param num_elements Number of elements to be copied.
    */
-  template <typename T> void copy_device_to_host(DualArray<T> dual_array);
+  template <typename T>
+  void copy_device_to_host(DualArray<T> dual_array, const size_t offset,
+                           const size_t num_elements);
 
   /**
    * @brief Frees memory allocated for a given dual array.

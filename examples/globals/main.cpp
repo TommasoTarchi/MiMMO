@@ -24,7 +24,7 @@ int main() {
     global_array.host_ptr[i] = i;
 
   /* copy array to device */
-  memory_manager.copy_host_to_device(global_array);
+  memory_manager.copy_host_to_device(global_array, 0, global_array.dim);
 
   /* perform calculation on device */
 #pragma acc parallel MIMMO_PRESENT(global_array) default(none)
@@ -35,7 +35,7 @@ int main() {
   }
 
   /* copy data back to host */
-  memory_manager.copy_device_to_host(global_array);
+  memory_manager.copy_device_to_host(global_array, 0, global_array.dim);
 
   /* print final results */
   std::cout << "Result array:  [";
