@@ -29,8 +29,8 @@ template <typename T> struct DualArray {
   T *host_ptr;       /*!< pointer to host memory */
   T *dev_ptr;        /*!< pointer to device memory */
   std::string label; /*!< label for memory tracker */
-  size_t dim;        /*!< number of elements in the array */
-  size_t size;       /*!< size in bytes of the array */
+  size_t size;       /*!< number of elements in the array */
+  size_t size_bytes; /*!< size in bytes of the array */
 };
 
 /**
@@ -69,14 +69,14 @@ public:
    *
    * @param label     Label that should be used to track the array in
    *                  memory.
-   * @param dim       Number of elements in the array.
+   * @param size      Number of elements in the array.
    * @param on_device Whether the array should be allocated on device as
    *                  well.
    *
    * @return Allocated array in the form of an object of type DualArray.
    */
   template <typename T>
-  DualArray<T> allocate(const std::string label, const size_t dim,
+  DualArray<T> allocate(const std::string label, const size_t size,
                         const bool on_device = false);
 
   /**
