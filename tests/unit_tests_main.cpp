@@ -137,7 +137,7 @@ TEST_CASE("Memcopy", "[mimmo]") {
     test_array_copy.host_ptr[i] = i;
   }
 
-  memory_manager.copy_host_to_device(test_array, 0, test_array.dim);
+  memory_manager.copy_host_to_device(test_array, 0, test_array.size);
 
 #pragma acc parallel deviceptr(test_array.dev_ptr)
   {
@@ -146,7 +146,7 @@ TEST_CASE("Memcopy", "[mimmo]") {
       MIMMO_GET_PTR(test_array)[i] *= 10;
   }
 
-  memory_manager.copy_device_to_host(test_array, 0, test_array.dim);
+  memory_manager.copy_device_to_host(test_array, 0, test_array.size);
 
   REQUIRE(((test_array.host_ptr[0] == test_array_copy.host_ptr[0] * 10) &&
            (test_array.host_ptr[1] == test_array_copy.host_ptr[1] * 10) &&
@@ -173,7 +173,7 @@ TEST_CASE("Memcopy - partial copy", "[mimmo]") {
     test_array_copy.host_ptr[i] = i;
   }
 
-  memory_manager.copy_host_to_device(test_array, 0, test_array.dim);
+  memory_manager.copy_host_to_device(test_array, 0, test_array.size);
 
 #pragma acc parallel deviceptr(test_array.dev_ptr)
   {
@@ -213,7 +213,7 @@ TEST_CASE("Present macro test", "[mimmo]") {
   for (int i = 0; i < 5; i++)
     test_array.host_ptr[i] = i;
 
-  memory_manager.copy_host_to_device(test_array, 0, test_array.dim);
+  memory_manager.copy_host_to_device(test_array, 0, test_array.size);
 
   for (int i = 0; i < 5; i++)
     test_array.host_ptr[i] += 1;
@@ -221,11 +221,11 @@ TEST_CASE("Present macro test", "[mimmo]") {
 #pragma acc parallel MIMMO_PRESENT(test_array)
   {
 #pragma acc loop
-    for (int i = 0; i < test_array.dim; i++)
+    for (int i = 0; i < test_array.size; i++)
       MIMMO_GET_PTR(test_array)[i] *= 10;
   }
 
-  memory_manager.copy_device_to_host(test_array, 0, test_array.dim);
+  memory_manager.copy_device_to_host(test_array, 0, test_array.size);
 
 #ifdef _OPENACC
   REQUIRE((test_array.host_ptr[0] == 0 && test_array.host_ptr[1] == 10 &&

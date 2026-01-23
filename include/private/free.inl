@@ -36,7 +36,7 @@ template <typename T> void DualMemoryManager::free(DualArray<T> &dual_array) {
   /* free memory on host */
   std::free(dual_array.host_ptr);
   dual_array.host_ptr = nullptr;
-  total_host_memory -= dual_array.size;
+  total_host_memory -= dual_array.size_bytes;
 
   /* free memory on device */
   if (dual_array.dev_ptr != nullptr) {
@@ -44,7 +44,7 @@ template <typename T> void DualMemoryManager::free(DualArray<T> &dual_array) {
     acc_free(dual_array.dev_ptr);
 #endif // _OPENACC
     dual_array.dev_ptr = nullptr;
-    total_device_memory -= dual_array.size;
+    total_device_memory -= dual_array.size_bytes;
   }
 }
 

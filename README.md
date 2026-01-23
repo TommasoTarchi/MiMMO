@@ -123,8 +123,8 @@ for how to generate it).
   - `host_ptr`: pointer to allocated memory on host;
   - `dev_ptr`: pointer to allocated memory on device;
   - `label`: label used to track dual array memory;
-  - `dim`: number of elements in array;
-  - `size`: size of array in bytes.
+  - `size`: number of elements in array;
+  - `size_bytes`: size of array in bytes.
 
 ### Classes
 
