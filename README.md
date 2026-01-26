@@ -93,6 +93,11 @@ The library works with so called *dual arrays*, i.e. data structures containing 
 pointers of the array, in addition to the number of elements, the size in bytes and the label used
 by the memory manager to track the array.
 
+The library also supports *dual scalars*, i.e. data structures containing a scalar value on host
+and a pointer to the scalar value on device, in addition to the label used to track the scalar. This
+kind of structure is particularly useful when using global variables, which are not easy to manage
+through OpenACC pragmas.
+
 To use MiMMO in your C++ project, include the header `mimmo/api.hpp` and access the functions within
 the `MiMMO` namespace; macros, instead, always begin with `MIMMO_`.
 
@@ -133,22 +138,35 @@ for how to generate it).
 
 ### Classes
 
-- `DualMemoryManager`: memory manager that can be used to manage dual arrays; the following methods
-  are currently available:
+- `DualMemoryManager`: memory manager that can be used to manage dual arrays and scalars; the following
+  methods are currently available:
   - `alloc_array()`: allocates the requested memory on host and (optionally) on device;
   - `update_array_host_to_device()`: copies the array data from host to device;
   - `update_array_device_to_host()`: copies the array data from device to host;
   - `free_array()`: frees both host and device memory of an array;
+  - `create_scalar()`: creates the scalar on host and (optionally) on device;
+  - `update_scalar_value()`: updates the value of the scalar on host and device;
+  - `destroy_scalar()`: destroys the scalar on host and device;
   - `return_total_memory_usage()`: returns the total amount of memory used on host and device;
   - `report_memory_usage()`: prints a report of memory usage for both host and device.
 
 ### Helper macros
 
 - `MIMMO_GET_PTR()`: if the program was compiled with OpenACC it returns the device pointer, otherwise
-  the host pointer of a given dual array; for safety, it should only be used inside OpenACC parallel
-  regions.
+  the host pointer of a given dual array; for safety, **it should only be used inside OpenACC parallel
+  regions**.
+- `MIMMO_GET_VALUE()`: if the program was compiled with OpenACC it returns the variable stored on device,
+  otherwise the variable stored on host of a given dual scalar; for safety, **it should only be used
+  inside OpenACC parallel regions**.
 - `MIMMO_PRESENT()`: communicates inside a pragma decorating an OpenACC parallel region that the data
-  of a dual array are already present on device; only to be used in OpenACC pragmas.
+  of a dual array or dual scalar are already present on device; only to be used in OpenACC pragmas.
+
+**Notice**: inside OpenACC parallel regions, **always** use the macros `MIMMO_GET_PTR()` and
+`MIMMO_GET_VALUE()` to access dual arrays and dual scalars, respectively. Direct access to the `dev_ptr`
+and `host_value` fields is unsafe and may lead to undefined behavior.
+
+**Notice**: **always** use the `MIMMO_PRESENT()` macro inside OpenACC pragmas to inform the compiler
+that the data is already present on device. This is mandataory for dual scalars too.
 
 ## Contributing
 
