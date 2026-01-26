@@ -199,7 +199,8 @@ public:
 
 // TODO: add description
 #ifdef _OPENACC
-#define MIMMO_GET_VALUE(x) *x.dev_ptr
+#define MIMMO_GET_VALUE(x)                                                     \
+  *x.dev_ptr // TODO: understand whether this is correct
 #else
 #define MIMMO_GET_VALUE(x) x.host_value
 #endif // _OPENACC

@@ -266,6 +266,7 @@ TEST_CASE("Value selection macro", "[mimmo]") {
   memory_manager.destroy_scalar(test_scalar);
 }
 
+// TODO: add dual scalar
 /**
  * @brief Present macro test for OpenACC pragmas.
  */
