@@ -27,12 +27,16 @@ int main() {
   memory_manager.update_array_host_to_device(global_array, 0,
                                              global_array.size);
 
+  /* create scalar */
+  global_scalar = memory_manager.create_scalar<int>("global_scalar", 10, true);
+
   /* perform calculation on device */
-#pragma acc parallel MIMMO_PRESENT(global_array) default(none)
+#pragma acc parallel MIMMO_PRESENT(global_array)                               \
+    MIMMO_PRESENT(global_scalar) default(none)
   {
 #pragma acc loop
     for (int i = 0; i < global_array.size; i++)
-      MIMMO_GET_PTR(global_array)[i] *= 10;
+      MIMMO_GET_PTR(global_array)[i] *= MIMMO_GET_VALUE(global_scalar);
   }
 
   /* copy data back to host */

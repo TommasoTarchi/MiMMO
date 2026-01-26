@@ -10,3 +10,4 @@
 
 extern int global_array_size;
 extern MiMMO::DualArray<int> global_array;
+extern MiMMO::DualScalar<int> global_scalar;

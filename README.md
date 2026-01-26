@@ -8,7 +8,8 @@ management of host and device memory, and it is often confusing for those who li
 happening behind the curtain.
 
 MiMMO aims to allow the users to have a finer control over memory allocations and movements, while keeping
-it simple and safe.
+it simple and safe. In fact, using MiMMO you can keep the standard pragma-based approach for compute
+regions while managing memory more explicitly through the use of MiMMO's API.
 
 Under the hood, MiMMO uses the OpenACC runtime API; however, it hides it completely, allowing the user to
 write clean code for both host and device.
@@ -136,6 +137,9 @@ for how to generate it).
   - `dev_ptr`: pointer to allocated memory on device;
   - `label`: label used to track dual scalar memory;
 
+**Warning**: dual scalars are thought mainly to be used for global variables. For local variables, it
+is usually an overkill, and simple `firstprivate` or `private` clauses should be preferred.
+
 ### Classes
 
 - `DualMemoryManager`: memory manager that can be used to manage dual arrays and scalars; the following
@@ -162,8 +166,8 @@ for how to generate it).
   of a dual array or dual scalar are already present on device; only to be used in OpenACC pragmas.
 
 **Notice**: inside OpenACC parallel regions, **always** use the macros `MIMMO_GET_PTR()` and
-`MIMMO_GET_VALUE()` to access dual arrays and dual scalars, respectively. Direct access to the `dev_ptr`
-and `host_value` fields is unsafe and may lead to undefined behavior.
+`MIMMO_GET_VALUE()` to access dual arrays and dual scalars, respectively. Direct access to fields is
+unsafe and may lead to undefined behavior.
 
 **Notice**: **always** use the `MIMMO_PRESENT()` macro inside OpenACC pragmas to inform the compiler
 that the data is already present on device. This is mandataory for dual scalars too.

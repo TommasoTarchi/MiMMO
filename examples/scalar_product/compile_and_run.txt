@@ -1,5 +1,5 @@
 To compile and run the example use:
- * - nvc++ -acc -Minfo=all -c main.cpp -I</path/to/MiMMO>/include
- * - nvc++ -acc -Minfo=all main.o -L</path/to/MiMMO>/build -lmimmo -o main.x
- * - export LD_LIBRARY_PATH=</path/to/MiMMO>/build:$LD_LIBRARY_PATH
- * - ./main.x
+- nvc++ -acc -Minfo=all -c main.cpp -I</path/to/MiMMO>/include
+- nvc++ -acc -Minfo=all main.o -L</path/to/MiMMO>/build -lmimmo -o main.x
+- export LD_LIBRARY_PATH=</path/to/MiMMO>/build:$LD_LIBRARY_PATH
+- ./main.x

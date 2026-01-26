@@ -134,6 +134,7 @@ TEST_CASE("Memcopy", "[mimmo]") {
            (test_array.host_ptr[4] == test_array_copy.host_ptr[4] * 10)));
 
   memory_manager.free_array(test_array);
+  memory_manager.free_array(test_array_copy);
 }
 
 /**
@@ -178,6 +179,7 @@ TEST_CASE("Memcopy - partial copy", "[mimmo]") {
 #endif // _OPENACC
 
   memory_manager.free_array(test_array);
+  memory_manager.free_array(test_array_copy);
 }
 
 /**
