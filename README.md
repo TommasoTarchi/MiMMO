@@ -131,7 +131,6 @@ for how to generate it).
   - `label`: label used to track dual array memory;
   - `size`: number of elements in array;
   - `size_bytes`: size of array in bytes.
-<<<<<<< HEAD
 
 - `DualScalar`: dual scalar data structure; it contains the following fields:
   - `host_value`: value on host;
@@ -139,9 +138,8 @@ for how to generate it).
   - `label`: label used to track dual scalar memory;
 
 **Warning**: dual scalars are thought mainly to be used for global variables. For local variables, it
-is usually an overkill, and simple `firstprivate` or `private` clauses should be preferred.
-=======
->>>>>>> main
+is usually an overkill, and simple `firstprivate`, `private`, `copy`, etc... clauses should be
+preferred.
 
 ### Classes
 
