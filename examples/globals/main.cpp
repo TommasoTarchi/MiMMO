@@ -37,18 +37,21 @@ int main() {
 #pragma acc loop
     for (int i = 0; i < global_array.size; i++)
       MIMMO_GET_PTR(global_array)[i] *= MIMMO_GET_VALUE(global_scalar);
+
+    MIMMO_GET_VALUE(global_scalar) += 5;
   }
 
   /* copy data back to host */
   memory_manager.update_array_device_to_host(global_array, 0,
                                              global_array.size);
+  memory_manager.update_scalar_device_to_host(global_scalar);
 
   /* print final results */
   std::cout << "Result array:  [";
   std::cout << global_array.host_ptr[0];
   for (int i = 1; i < global_array.size; i++)
     std::cout << ",  " << global_array.host_ptr[i];
-  std::cout << "]";
+  std::cout << "]\n" << "Result scalar: " << global_scalar.host_value;
   std::cout << std::endl;
 
   /* free global array and destroy global scalar */

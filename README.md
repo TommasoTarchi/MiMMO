@@ -149,7 +149,8 @@ is usually an overkill, and simple `firstprivate` or `private` clauses should be
   - `update_array_device_to_host()`: copies the array data from device to host;
   - `free_array()`: frees both host and device memory of an array;
   - `create_scalar()`: creates the scalar on host and (optionally) on device;
-  - `set_scalar_value()`: safely updates the value of the scalar on host or device (from host);
+  - `update_scalar_host_to_device()`: copies a scalar value from host to device;
+  - `update_scalar_device_to_host()`: copies a scalar value from device to host;
   - `destroy_scalar()`: destroys the scalar on host and device;
   - `return_total_memory_usage()`: returns the total amount of memory used on host and device;
   - `report_memory_usage()`: prints a report of memory usage for both host and device.

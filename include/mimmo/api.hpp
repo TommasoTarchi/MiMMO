@@ -169,23 +169,38 @@ public:
                               const bool on_device = false);
 
   /**
-   * @brief Sets a dual scalar value.
+   * @brief Updates the value of a dual scalar from host to device.
    *
    * @details
-   * This function updates the value of a dual scalar on host **or** on
-   * device.
+   * This function updates the value of a dual scalar from host to device.
+   *
+   * If the scalar is not present on device, the program aborts.
    *
    * **Warning**: the scalar must have been previously created using the
    * create_scalar() method.
    *
-   * @param dual_scalar  Dual scalar to be updated.
-   * @param value        Value to which the scalar should be set.
-   * @param on_device    'true' if the scalar should be updated on device,
-   *                     'false' if it should be updated on host.
+   * @param dual_scalar Dual scalar to synchronize.
    */
   template <typename T>
-  void set_scalar_value(DualScalar<T> &dual_scalar, const T value,
-                        const bool on_device = false);
+  void update_scalar_host_to_device(DualScalar<T> &dual_scalar);
+
+  /**
+   * @brief Updates the value of a dual scalar from device to host.
+   *
+   * @details
+   * This function updates the value of a dual scalar from device to host.
+   *
+   * If the scalar is not present on device, the program aborts.
+   *
+   * If OpenACC is not enabled, this function does nothing.
+   *
+   * **Warning**: the scalar must have been previously created using the
+   * create_scalar() method.
+   *
+   * @param dual_scalar Dual scalar to synchronize.
+   */
+  template <typename T>
+  void update_scalar_device_to_host(DualScalar<T> &dual_scalar);
 
   /**
    * @brief Frees memory allocated on device for a given scalar.

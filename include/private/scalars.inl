@@ -68,42 +68,62 @@ DualScalar<T> DualMemoryManager::create_scalar(const std::string label,
 }
 
 /**
- * @brief Sets a dual scalar value.
+ * @brief Updates the value of a dual scalar from host to device.
  *
  * @details
- * This function updates the value of a dual scalar on host **or** on
- * device.
+ * This function updates the value of a dual scalar from host to device.
+ *
+ * If the scalar is not present on device, the program aborts.
  *
  * **Warning**: the scalar must have been previously created using the
  * create_scalar() method.
  *
- * @param dual_scalar  Dual scalar to be updated.
- * @param value        Value to which the scalar should be set.
- * @param on_device    'true' if the scalar should be updated on device,
- *                     'false' if it should be updated on host (if 'true'
- *                     and OpenACC is not enabled, the function does
- *                     nothing).
+ * @param dual_scalar Dual scalar to synchronize.
  */
 template <typename T>
-void DualMemoryManager::set_scalar_value(DualScalar<T> &dual_scalar,
-                                         const T value, const bool on_device) {
-  if (on_device) {
+void DualMemoryManager::update_scalar_host_to_device(
+    DualScalar<T> &dual_scalar) {
 
 #ifdef _OPENACC
-    /* check that device pointer is initialized */
-    if (dual_scalar.dev_ptr == nullptr)
-      abort_manager(dual_scalar.label + "'s device pointer is a null pointer.");
+  /* check that device pointer is initialized */
+  if (dual_scalar.dev_ptr == nullptr)
+    abort_manager(dual_scalar.label + "'s device pointer is a null pointer.");
 
-    /* copy data from host to device */
-    T value_tmp = value;
-    acc_memcpy_to_device(dual_scalar.dev_ptr, &value_tmp, sizeof(T));
+  /* copy data from host to device */
+  acc_memcpy_to_device(dual_scalar.dev_ptr, &dual_scalar.host_value, sizeof(T));
 #endif // _OPENACC
 
-  } else {
+  return;
+}
 
-    /* update host value */
-    dual_scalar.host_value = value;
-  }
+/**
+ * @brief Updates the value of a dual scalar from device to host.
+ *
+ * @details
+ * This function updates the value of a dual scalar from device to host.
+ *
+ * If the scalar is not present on device, the program aborts.
+ *
+ * If OpenACC is not enabled, this function does nothing.
+ *
+ * **Warning**: the scalar must have been previously created using the
+ * create_scalar() method.
+ *
+ * @param dual_scalar Dual scalar to synchronize.
+ */
+template <typename T>
+void DualMemoryManager::update_scalar_device_to_host(
+    DualScalar<T> &dual_scalar) {
+
+#ifdef _OPENACC
+  /* check that device pointer is initialized */
+  if (dual_scalar.dev_ptr == nullptr)
+    abort_manager(dual_scalar.label + "'s device pointer is a null pointer.");
+
+  /* copy data from host to device */
+  acc_memcpy_from_device(&dual_scalar.host_value, dual_scalar.dev_ptr,
+                         sizeof(T));
+#endif // _OPENACC
 
   return;
 }

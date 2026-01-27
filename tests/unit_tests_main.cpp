@@ -197,7 +197,7 @@ TEST_CASE("Scalar value update", "[mimmo]") {
   acc_memcpy_from_device(&test_value_dev_1, test_scalar.dev_ptr, sizeof(int));
 #endif // _OPENACC
 
-  memory_manager.set_scalar_value(test_scalar, 200, false);
+  test_scalar.host_value = 200;
 
   const int test_value_host_2 = test_scalar.host_value;
 #ifdef _OPENACC
@@ -205,7 +205,7 @@ TEST_CASE("Scalar value update", "[mimmo]") {
   acc_memcpy_from_device(&test_value_dev_2, test_scalar.dev_ptr, sizeof(int));
 #endif // _OPENACC
 
-  memory_manager.set_scalar_value(test_scalar, 200, true);
+  memory_manager.update_scalar_host_to_device(test_scalar);
 
   const int test_value_host_3 = test_scalar.host_value;
 #ifdef _OPENACC
@@ -288,24 +288,30 @@ TEST_CASE("Present macro test", "[mimmo]") {
   for (int i = 0; i < 5; i++)
     test_array.host_ptr[i] += 1;
 
+  test_scalar.host_value += 5;
+
 #pragma acc parallel MIMMO_PRESENT(test_array)                                 \
     MIMMO_PRESENT(test_scalar) default(none)
   {
 #pragma acc loop
     for (int i = 0; i < test_array.size; i++)
       MIMMO_GET_PTR(test_array)[i] *= MIMMO_GET_VALUE(test_scalar);
+
+    MIMMO_GET_VALUE(test_scalar) += 5;
   }
 
   memory_manager.update_array_device_to_host(test_array, 0, test_array.size);
 
+  memory_manager.update_scalar_device_to_host(test_scalar);
+
 #ifdef _OPENACC
   REQUIRE((test_array.host_ptr[0] == 0 && test_array.host_ptr[1] == 10 &&
            test_array.host_ptr[2] == 20 && test_array.host_ptr[3] == 30 &&
-           test_array.host_ptr[4] == 40));
+           test_array.host_ptr[4] == 40 && test_scalar.host_value == 15));
 #else
   REQUIRE((test_array.host_ptr[0] == 10 && test_array.host_ptr[1] == 20 &&
            test_array.host_ptr[2] == 30 && test_array.host_ptr[3] == 40 &&
-           test_array.host_ptr[4] == 50));
+           test_array.host_ptr[4] == 50 && test_scalar.host_value == 20));
 #endif // _OPENACC
 
   memory_manager.free_array(test_array);
