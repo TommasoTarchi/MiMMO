@@ -64,17 +64,13 @@ DualScalar<T> DualMemoryManager::create_scalar(const std::string label,
   /* update scalar label */
   dual_scalar.label = label;
 
-  /* update used memory and memory tracker */
-  total_host_memory += sizeof(T);
+  /* update memory tracker */
 #ifdef _OPENACC
-  if (on_device)
-    total_device_memory += sizeof(T);
-
-  const bool ret =
-      add_to_memory_tracker(memory_tracker, label, sizeof(T), on_device);
+  const bool ret = add_to_memory_tracker(memory_tracker, total_memory, label,
+                                         sizeof(T), on_device);
 #else
-  const bool ret =
-      add_to_memory_tracker(memory_tracker, label, sizeof(T), false);
+  const bool ret = add_to_memory_tracker(memory_tracker, total_memory, label,
+                                         sizeof(T), false);
 #endif // _OPENACC
 
   if (ret)
@@ -164,21 +160,17 @@ void DualMemoryManager::destroy_scalar(DualScalar<T> &dual_scalar) {
   /* check that scalar was actually recorded and update memory
    * tracker
    * */
-  const bool ret =
-      remove_from_memory_tracker(memory_tracker, dual_scalar.label);
+  const bool ret = remove_from_memory_tracker(memory_tracker, total_memory,
+                                              dual_scalar.label);
   if (ret) {
     abort_mimmo(dual_scalar.label + " was not found by memory manager.");
   }
 
-  /* update total memory used by host */
-  total_host_memory -= sizeof(T);
-
-  /* free memory on device and update total memory used by device */
+  /* free memory on device */
 #ifdef _OPENACC
   if (dual_scalar.dev_ptr != nullptr) {
     acc_free(dual_scalar.dev_ptr);
     dual_scalar.dev_ptr = nullptr;
-    total_device_memory -= sizeof(T);
   }
 #endif // _OPENACC
 

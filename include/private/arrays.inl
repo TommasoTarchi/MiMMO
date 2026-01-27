@@ -62,16 +62,12 @@ DualArray<T> DualMemoryManager::alloc_array(const std::string label,
   dual_array.size = size;
   dual_array.size_bytes = size * sizeof(T);
 
-  /* update used memory and memory tracker */
-  total_host_memory += dual_array.size_bytes;
+  /* update memory tracker */
 #ifdef _OPENACC
-  if (on_device)
-    total_device_memory += dual_array.size_bytes;
-
-  const bool ret = add_to_memory_tracker(memory_tracker, label,
+  const bool ret = add_to_memory_tracker(memory_tracker, total_memory, label,
                                          dual_array.size_bytes, on_device);
 #else
-  const bool ret = add_to_memory_tracker(memory_tracker, label,
+  const bool ret = add_to_memory_tracker(memory_tracker, total_memory, label,
                                          dual_array.size_bytes, false);
 #endif // _OPENACC
 
@@ -172,7 +168,8 @@ void DualMemoryManager::free_array(DualArray<T> &dual_array) {
   /* check that array was actually recorded and update memory
    * tracker
    * */
-  const bool ret = remove_from_memory_tracker(memory_tracker, dual_array.label);
+  const bool ret = remove_from_memory_tracker(memory_tracker, total_memory,
+                                              dual_array.label);
   if (ret) {
     abort_mimmo(dual_array.label + " was not found by memory manager.");
   }
@@ -180,14 +177,12 @@ void DualMemoryManager::free_array(DualArray<T> &dual_array) {
   /* free memory on host */
   std::free(dual_array.host_ptr);
   dual_array.host_ptr = nullptr;
-  total_host_memory -= dual_array.size_bytes;
 
   /* free memory on device */
 #ifdef _OPENACC
   if (dual_array.dev_ptr != nullptr) {
     acc_free(dual_array.dev_ptr);
     dual_array.dev_ptr = nullptr;
-    total_device_memory -= dual_array.size_bytes;
   }
 #endif // _OPENACC
 

@@ -19,6 +19,6 @@ namespace MiMMO {
  *
  * @param message Error message to be displayed.
  */
-void abort_mimmo(const std::string);
+void abort_mimmo(const std::string message);
 
 } // namespace MiMMO

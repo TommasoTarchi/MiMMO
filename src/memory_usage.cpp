@@ -22,11 +22,7 @@ namespace MiMMO {
  * @return (total host memory used, total device memory used)
  */
 std::pair<size_t, size_t> DualMemoryManager::return_total_memory_usage() {
-  /* build return pair (used host and device memory) */
-  const std::pair<size_t, size_t> memory_usage(total_host_memory,
-                                               total_device_memory);
-
-  return memory_usage;
+  return total_memory;
 }
 
 /**
@@ -86,9 +82,9 @@ void DualMemoryManager::report_memory_usage() {
   std::cout << big_separator;
 
   /* print total memory usage */
-  std::cout << "Total host memory used: " << total_host_memory << " bytes"
+  std::cout << "Total host memory used: " << total_memory.first << " bytes"
             << "\n";
-  std::cout << "Total device memory used: " << total_device_memory << " bytes"
+  std::cout << "Total device memory used: " << total_memory.second << " bytes"
             << "\n";
   std::cout << big_separator << "\n";
 

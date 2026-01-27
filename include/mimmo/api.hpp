@@ -60,17 +60,16 @@ template <typename T> struct DualScalar {
  */
 class DualMemoryManager {
 private:
-  size_t total_host_memory;   /*!< total used memory on host */
-  size_t total_device_memory; /*!< total used memory on device */
-  std::map<std::string, std::pair<size_t, bool>>
-      memory_tracker; /*!< memory tracker for reports */
+  std::pair<size_t, size_t> total_memory; /*!< total used memory on host
+                                               and device */
+  std::map<std::string, std::pair<size_t, bool>> memory_tracker; /*!< memory
+                                                        tracker for reports */
 
 public:
   /**
    * @brief Class constructor.
    */
-  DualMemoryManager()
-      : total_host_memory(0), total_device_memory(0), memory_tracker({}) {}
+  DualMemoryManager() : total_memory({0, 0}), memory_tracker({}) {}
 
   /**
    * @brief Allocates dual array memory.
