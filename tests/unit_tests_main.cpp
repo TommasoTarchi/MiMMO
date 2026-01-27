@@ -15,7 +15,7 @@ struct test_struct {
   int second_field;
 };
 
-// TODO: add scalars
+// TODO: add dual scalars
 /**
  * @brief Memory manager test using basic types.
  */
@@ -69,7 +69,7 @@ TEST_CASE("Memory manager - base types", "[mimmo]") {
 #endif // _OPENACC
 }
 
-// TODO: add scalars
+// TODO: add dual scalars
 /**
  * @brief Memory manager test using test struct.
  */
@@ -155,7 +155,7 @@ TEST_CASE("Memcopy - partial copy", "[mimmo]") {
 
   memory_manager.update_array_host_to_device(test_array, 0, test_array.size);
 
-#pragma acc parallel deviceptr(test_array.dev_ptr)
+#pragma acc parallel deviceptr(test_array.dev_ptr) default(none)
   {
 #pragma acc loop
     for (int i = 0; i < 5; i++)
@@ -269,7 +269,6 @@ TEST_CASE("Value selection macro", "[mimmo]") {
   memory_manager.destroy_scalar(test_scalar);
 }
 
-// TODO: add dual scalar
 /**
  * @brief Present macro test for OpenACC pragmas.
  */
@@ -278,6 +277,8 @@ TEST_CASE("Present macro test", "[mimmo]") {
 
   MiMMO::DualArray<int> test_array =
       memory_manager.alloc_array<int>("test_array", 5, true);
+  MiMMO::DualScalar<int> test_scalar =
+      memory_manager.create_scalar<int>("test_scalar", 10, true);
 
   for (int i = 0; i < 5; i++)
     test_array.host_ptr[i] = i;
@@ -287,11 +288,12 @@ TEST_CASE("Present macro test", "[mimmo]") {
   for (int i = 0; i < 5; i++)
     test_array.host_ptr[i] += 1;
 
-#pragma acc parallel MIMMO_PRESENT(test_array)
+#pragma acc parallel MIMMO_PRESENT(test_array)                                 \
+    MIMMO_PRESENT(test_scalar) default(none)
   {
 #pragma acc loop
     for (int i = 0; i < test_array.size; i++)
-      MIMMO_GET_PTR(test_array)[i] *= 10;
+      MIMMO_GET_PTR(test_array)[i] *= MIMMO_GET_VALUE(test_scalar);
   }
 
   memory_manager.update_array_device_to_host(test_array, 0, test_array.size);

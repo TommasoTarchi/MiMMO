@@ -33,7 +33,15 @@ template <typename T> struct DualArray {
   size_t size_bytes; /*!< size in bytes of the array */
 };
 
-// TODO: add description
+/**
+ * @brief Stores dual scalar data.
+ *
+ * @details
+ * This struct contains all needed information related to a dual
+ * scalar, i.e. the couple host value-device pointer.
+ *
+ * @tparam T Type of scalar variable.
+ */
 template <typename T> struct DualScalar {
   T host_value;      /*!< value on host */
   T *dev_ptr;        /*!< pointer to value on device */
@@ -136,17 +144,63 @@ public:
    */
   template <typename T> void free_array(DualArray<T> &dual_array);
 
-  // TODO: add description
+  /**
+   * @brief Creates a dual scalar.
+   *
+   * @details
+   * This function creates a scalar variable on host and optionally on
+   * device (allocating a one-element array), and assigns the requested
+   * value. It returns an object of type DualScalar that contains the host
+   * value and the device pointer.
+   *
+   * @tparam T Type of element of variable to be created.
+   *
+   * @param label     Label that should be used to track the scalar in
+   *                  memory.
+   * @param value     Value to which the scalar should be initialized.
+   * @param on_device Whether the scalar should be created on device as
+   *                  well (ignored if main code compiled without OpenACC
+   *                  support).
+   *
+   * @return Created variable in the form of an object of type DualScalar.
+   */
   template <typename T>
   DualScalar<T> create_scalar(const std::string label, const T value,
                               const bool on_device = false);
 
-  // TODO: add description
+  /**
+   * @brief Sets a dual scalar value.
+   *
+   * @details
+   * This function updates the value of a dual scalar on host **or** on
+   * device.
+   *
+   * **Warning**: the scalar must have been previously created using the
+   * create_scalar() method.
+   *
+   * @param dual_scalar  Dual scalar to be updated.
+   * @param value        Value to which the scalar should be set.
+   * @param on_device    'true' if the scalar should be updated on device,
+   *                     'false' if it should be updated on host.
+   */
   template <typename T>
   void set_scalar_value(DualScalar<T> &dual_scalar, const T value,
                         const bool on_device = false);
 
-  // TODO: add description
+  /**
+   * @brief Frees memory allocated on device for a given scalar.
+   *
+   * @details
+   * This function frees memory allocated on device for a given dual
+   * scalar.
+   *
+   * If the array is not tracked (i.e. was not allocated using this
+   * memory manager, or it was already freed), the program aborts.
+   *
+   * If OpenACC is not enabled, this function does nothing.
+   *
+   * @param dual_scalar Dual scalar to be destroyed.
+   */
   template <typename T> void destroy_scalar(DualScalar<T> &dual_scalar);
 
   /**
@@ -197,10 +251,21 @@ public:
 #define MIMMO_GET_PTR(x) x.host_ptr
 #endif // _OPENACC
 
-// TODO: add description
+/**
+ * @brief Returns the right value (host or device) depending on whether
+ * running on host or device.
+ *
+ * @details
+ * This macro selects the value stored on host or device depending on whether
+ * OpenACC is enabled or not.
+ *
+ * It is thought to be used inside OpenACC compute regions to keep the
+ * code clean and avoid #ifdef's.
+ *
+ * @param x Dual scalar from which the needed value should be selected.
+ */
 #ifdef _OPENACC
-#define MIMMO_GET_VALUE(x)                                                     \
-  *x.dev_ptr // TODO: understand whether this is correct
+#define MIMMO_GET_VALUE(x) *x.dev_ptr
 #else
 #define MIMMO_GET_VALUE(x) x.host_value
 #endif // _OPENACC
