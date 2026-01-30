@@ -38,7 +38,7 @@ std::pair<size_t, size_t> DualMemoryManager::return_total_memory_usage() {
 void DualMemoryManager::report_memory_usage() {
 
   /* define header */
-  const std::string label_header = "Array Label";
+  const std::string label_header = "Label";
   const std::string size_header = "Size (bytes)";
   const std::string on_device_header = "On Device";
 
