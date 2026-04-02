@@ -1,7 +1,7 @@
 # MiMMO
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B17)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C.svg)](https://en.wikipedia.org/wiki/C%2B%2B17)
 [![OpenACC](https://img.shields.io/badge/OpenACC-2.0-15B2D3?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxNUIyRDMiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMTRjLTUuNTIgMC0xMC00LjQ4LTEwLTEwUzYuNDggMiAxMiAyUzIyIDYuNDggMjIgMTJzLTQuNDggNi00LjQ4IDZoLS40OEw3IDE0bDQgNCA0LTRMMiA1LjI4WiIgLz48L3N2Zz4=)](https://www.openacc.org/)
 
 **MiMMO** (Minimal Memory Manager for OpenACC) is a simple, safe, and easy-to-use CPU/GPU memory manager for OpenACC programs.
@@ -49,7 +49,7 @@ Include `mimmo/api.hpp` and link against `libmimmo.so` (in `build/`).
 
 > **Note**: GPU support is not required to compile MiMMO. The library is header-only for OpenACC calls; GPU features activate by linking OpenACC at compile time.
 >
-> Use the same compiler for MiMMO and your program. On non-OpenACC compilers, use `-DOPENACC=OFF` or `-DUNIT_TESTS=OFF`.
+> If possible, use the same compiler for MiMMO and your program. On non-OpenACC compilers, use `-DOPENACC=OFF` or `-DUNIT_TESTS=OFF`.
 
 ## Building and Testing
 
