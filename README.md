@@ -1,23 +1,25 @@
 # MiMMO
 
-**MiMMO** (Minimal Memory Manager for Openacc) is a simple, safe, easy to use CPU/GPU memory manager to
-work with OpenACC ([https://www.openacc.org/](https://www.openacc.org/)) in C++.
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B17)
+[![OpenACC](https://img.shields.io/badge/OpenACC-2.0-15B2D3?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxNUIyRDMiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMTRjLTUuNTIgMC0xMC00LjQ4LTEwLTEwUzYuNDggMiAxMiAyUzIyIDYuNDggMjIgMTJzLTQuNDggNi00LjQ4IDZoLS40OEw3IDE0bDQgNCA0LTRMMiA1LjI4WiIgLz48L3N2Zz4=)](https://www.openacc.org/)
 
-The pragma-based approach of OpenACC is extremely useful, however it only allows for a very high-level
-management of host and device memory, and it is often confusing for those who like to understand what is
-happening behind the curtain.
+**MiMMO** (Minimal Memory Manager for OpenACC) is a simple, safe, and easy-to-use CPU/GPU memory manager for OpenACC programs.
 
-MiMMO aims to allow the users to have a finer control over memory allocations and movements, while keeping
-it simple and safe. In fact, using MiMMO you can keep the standard pragma-based approach for compute
-regions while managing memory more explicitly through the use of MiMMO's API.
+OpenACC's pragma-based approach is powerful, but its high-level memory management can be opaque. MiMMO provides finer control over memory allocations and transfers while keeping the code clean and safe.
 
-Under the hood, MiMMO uses the OpenACC runtime API; however, it hides it completely, allowing the user to
-write clean code for both host and device.
+Under the hood, MiMMO wraps the OpenACC runtime API. It tracks all host and device allocations, with memory reports available on demand.
 
-The manager also keeps track of all memory allocations on host and device, and reports can be requested at
-any time.
+## Features
+
+- **Dual arrays**: Explicit host/device pointers with tracked metadata
+- **Dual scalars**: Simplified global variable management
+- **Safety**: Macros ensure correct pointer access within parallel regions
+- **Transparency**: Request memory usage reports at any time
+- **Header-only core**: GPU support only requires linking OpenACC at compile time
 
 ## Table of Contents
+- [Quick Start](#quick-start)
 - [Requirements](#requirements)
 - [Building and Testing](#building-and-testing)
 - [Usage](#usage)
@@ -25,170 +27,106 @@ any time.
 - [Contributing](#contributing)
 - [License](#license)
 
+## Quick Start
+
+```bash
+# Clone and build
+git clone git@github.com:TommasoTarchi/MiMMO.git
+cd MiMMO
+mkdir build && cmake -S . -B build && cmake --build build
+
+# Run tests
+ctest --test-dir build --output-on-failure
+```
+
+Include `mimmo/api.hpp` and link against `libmimmo.so` (in `build/`).
+
 ## Requirements
 
-- **CMake**: at least version 3.15
-- **Compiler supporting C++17**: recommended **NVIDIA HPC SDK (NVHPC)** version 25.x
-- **Doxygen** (optional: required to generate API documentation)
+- **CMake**: ≥ 3.15
+- **C++17 compiler**: **NVIDIA HPC SDK (NVHPC)** 25.x recommended
+- **Doxygen** (optional): for API documentation
 
-### Notes on compiler
-
-Even if the library is thought to be used inside OpenACC programs, having GPU support is not required
-during its compilation.
-
-In fact, all parts of the library involving OpenACC calls are header-only; i.e. to use them with GPU
-capabilities you only need to link OpenACC while compiling your own program.
-
-The only part of the library that is compiled differently depending on whether OpenACC is enabled are the
-tests. If you are using a compiler that does not support OpenACC, please compile without GPU support
-(using `-DOPENACC=OFF`) or disable tests completely (using `-DUNIT_TESTS=OFF`).
-
-In any case, we suggest to use the same compiler to compile the library and the program including it. In
-particular we suggest to use **NVIDIA HPC SDK (NVHPC)** at least version 21.7 (recommended 25.x).
+> **Note**: GPU support is not required to compile MiMMO. The library is header-only for OpenACC calls; GPU features activate by linking OpenACC at compile time.
+>
+> Use the same compiler for MiMMO and your program. On non-OpenACC compilers, use `-DOPENACC=OFF` or `-DUNIT_TESTS=OFF`.
 
 ## Building and Testing
 
-MiMMO can be compiled as a shared library, using CMake.
+```bash
+mkdir build
+cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
 
-To build the library and run tests, follow these steps:
-
-1. Clone the repository:
-   ```bash
-   git clone git@github.com:TommasoTarchi/MiMMO.git
-   cd MiMMO
-   ```
-
-2. Create a build directory and compile the code:
-   ```bash
-   mkdir build
-   cmake -S . -B build
-   cmake --build build
-   ```
-   Notice:
-   - Testing is enabled by default. If you want to avoid Catch2 overhead in the building phase, you can
-   disable tests by adding `-DUNIT_TESTS=OFF` to the `cmake -S . -B build` command.
-   - OpenACC in tests is enabled by default. If you want to disable it, you can add `-DOPENACC=OFF` to
-   the `cmake -S . -B build` command.
-
-3. (Optional) Run the tests:
-   ```bash
-   ctest --test-dir build --output-on-failure
-   ```
-
-The compiled library `libmimmo.so` will be located in the `build/` directory.
+Options:
+- `-DUNIT_TESTS=OFF`: Skip Catch2 test overhead
+- `-DOPENACC=OFF`: Build without OpenACC support
 
 ### Generate documentation
 
-We recommend to generate Doxygen documentation as well.
-
-This can be done, after the library has been compiled, by issuing:
 ```bash
 cmake --build build --target docs
 ```
 
-The generated documentation will be placed in `build/docs/`.
+Docs are placed in `build/docs/`.
 
 ## Usage
 
-The library works with so called *dual arrays*, i.e. data structures containing host and device
-pointers of the array, in addition to the number of elements, the size in bytes and the label used
-by the memory manager to track the array.
+MiMMO works with *dual arrays* (host/device pointers with metadata) and *dual scalars* (host value with device pointer). Include `mimmo/api.hpp` and use the `MiMMO` namespace.
 
-The library also supports *dual scalars*, i.e. data structures containing a scalar value on host
-and a pointer to the scalar value on device, in addition to the label used to track the scalar. This
-kind of structure is particularly useful when using global variables, which are not easy to manage
-through OpenACC pragmas.
+Working examples are in [`examples/`](./examples/).
 
-To use MiMMO in your C++ project, include the header `mimmo/api.hpp` and access the functions within
-the `MiMMO` namespace; macros, instead, always begin with `MIMMO_`.
+### Compile your program
 
-Examples of working OpenACC programs using MiMMO can be found in the [examples folder](./examples/).
-
-Compile your program linking against the MiMMO library as follows, adjusting the paths as needed:
 ```bash
-nvc++ -acc -Minfo=all -c my_program.cpp -I</path/to/MiMMO>/include
-nvc++ -acc -Minfo=all my_program.o -L</path/to/MiMMO>/build -lmimmo -o my_program
+nvc++ -acc -c my_program.cpp -I</path/to/MiMMO>/include
+nvc++ -acc my_program.o -L</path/to/MiMMO>/build -lmimmo -o my_program
 ```
 
-Before running your program, ensure that the dynamic linker can find the `libmimmo.so` library. You
-can set the `LD_LIBRARY_PATH` environment variable to include the directory where the library is
-located:
+Ensure the dynamic linker finds the library:
 ```bash
 export LD_LIBRARY_PATH=</path/to/MiMMO>/build:$LD_LIBRARY_PATH
 ```
 
 ## API Reference
 
-The following is a list of all features available in the MiMMO API. For a more detailed description
-of them, please see the Doxygen documentation (see [Generate documentation](#generate-documentation)
-for how to generate it).
+See the [Doxygen documentation](#generate-documentation) for full details.
 
 ### Data structures
 
-- `DualArray`: dual array data structure; it contains the following fields:
-  - `host_ptr`: pointer to allocated memory on host;
-  - `dev_ptr`: pointer to allocated memory on device;
-  - `label`: label used to track dual array memory;
-  - `size`: number of elements in array;
-  - `size_bytes`: size of array in bytes.
+- **`DualArray`**: Contains `host_ptr`, `dev_ptr`, `label`, `size`, `size_bytes`
+- **`DualScalar`**: Contains `host_value`, `dev_ptr`, `label`
 
-- `DualScalar`: dual scalar data structure; it contains the following fields:
-  - `host_value`: value on host;
-  - `dev_ptr`: pointer to allocated memory on device;
-  - `label`: label used to track dual scalar memory;
+### Class
 
-**Warning**: dual scalars are thought mainly to be used for global variables. For local variables, it
-is usually an overkill, and simple `firstprivate`, `private`, `copy`, etc... clauses should be
-preferred.
+- **`DualMemoryManager`**: Memory manager with methods for allocating, copying, and freeing dual arrays and scalars
+  - Arrays: `alloc_array()`, `update_array_host_to_device()`, `update_array_device_to_host()`, `free_array()`
+  - Scalars: `create_scalar()`, `update_scalar_host_to_device()`, `update_scalar_device_to_host()`, `destroy_scalar()`
+  - Reporting: `return_total_memory_usage()`, `report_memory_usage()`
 
-### Classes
+> All `DualMemoryManager` methods must be called from the host only.
 
-- `DualMemoryManager`: memory manager that can be used to manage dual arrays and scalars; the following
-  methods are currently available:
-  - `alloc_array()`: allocates the requested memory on host and (optionally) on device;
-  - `update_array_host_to_device()`: copies the array data from host to device;
-  - `update_array_device_to_host()`: copies the array data from device to host;
-  - `free_array()`: frees both host and device memory of an array;
-  - `create_scalar()`: creates the scalar on host and (optionally) on device;
-  - `update_scalar_host_to_device()`: copies a scalar value from host to device;
-  - `update_scalar_device_to_host()`: copies a scalar value from device to host;
-  - `destroy_scalar()`: destroys the scalar on host and device;
-  - `return_total_memory_usage()`: returns the total amount of memory used on host and device;
-  - `report_memory_usage()`: prints a report of memory usage for both host and device.
+### Macros
 
-**Warning**: all methods of the `DualMemoryManager` class should be called from the host only.
+- **`MIMMO_GET_PTR()`**: Returns device pointer (OpenACC) or host pointer; use inside parallel regions only
+- **`MIMMO_GET_VALUE()`**: Returns device value (OpenACC) or host value; use inside parallel regions only
+- **`MIMMO_PRESENT()`**: Informs OpenACC that data is already on device; use in pragma clauses
 
-### Helper macros
-
-- `MIMMO_GET_PTR()`: if the program was compiled with OpenACC it returns the device pointer, otherwise
-  the host pointer of a given dual array; for safety, **it should only be used inside OpenACC parallel
-  regions**.
-- `MIMMO_GET_VALUE()`: if the program was compiled with OpenACC it returns the variable stored on device,
-  otherwise the variable stored on host of a given dual scalar; for safety, **it should only be used
-  inside OpenACC parallel regions**.
-- `MIMMO_PRESENT()`: communicates inside a pragma decorating an OpenACC parallel region that the data
-  of a dual array or dual scalar are already present on device; only to be used in OpenACC pragmas.
-
-**Notice**: inside OpenACC parallel regions, **always** use the macros `MIMMO_GET_PTR()` and
-`MIMMO_GET_VALUE()` to access dual arrays and dual scalars, respectively. Direct access to fields is
-unsafe and may lead to undefined behavior.
-
-**Notice**: **always** use the `MIMMO_PRESENT()` macro in OpenACC pragmas to inform the compiler that
-the data is already present on device. This is mandatory for dual scalars too.
+> Always use `MIMMO_PRESENT()` in pragmas to indicate data is present on device.
 
 ## Contributing
 
-Contributions are welcome!
-
-If you find a bug, have an idea for an improvement, or want to add a new feature, feel free to open an
-issue or submit a pull request.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0. See [LICENSE](LICENSE) for details.
+GNU General Public License v3.0. See [LICENSE](LICENSE).
 
-If you use this library in your work, please consider citing the repository:
-````
-Tarchi, T. (2026). MiMMO (Minimal Memory Manager for Openacc): a simple, safe, easy to use CPU/GPU
-memory manager to work with OpenACC. GitHub repository. https://github.com/TommasoTarchi/MiMMO
-````
+## Citation
+
+```
+Tarchi, T. (2026). MiMMO: Minimal Memory Manager for OpenACC. 
+GitHub. https://github.com/TommasoTarchi/MiMMO
+```
