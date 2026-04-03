@@ -252,9 +252,9 @@ public:
  * @param x Dual array from which the needed pointer should be selected.
  */
 #ifdef _OPENACC
-#define MIMMO_GET_PTR(x) x.dev_ptr
+#define MIMMO_GET_PTR(x) (x).dev_ptr
 #else
-#define MIMMO_GET_PTR(x) x.host_ptr
+#define MIMMO_GET_PTR(x) (x).host_ptr
 #endif // _OPENACC
 
 /**
@@ -271,9 +271,9 @@ public:
  * @param x Dual scalar from which the needed value should be selected.
  */
 #ifdef _OPENACC
-#define MIMMO_GET_VALUE(x) *x.dev_ptr
+#define MIMMO_GET_VALUE(x) *((x).dev_ptr)
 #else
-#define MIMMO_GET_VALUE(x) x.host_value
+#define MIMMO_GET_VALUE(x) (x).host_value
 #endif // _OPENACC
 
 /**
@@ -301,7 +301,7 @@ public:
 #ifdef _OPENACC
 #define MIMMO_PRESENT(x) copyin(x) deviceptr(x.dev_ptr)
 #else
-#define MIMMO_PRESENT(x) ()
+#define MIMMO_PRESENT(x)
 #endif // _OPENACC
 
 /* include of templated methods definitions */
