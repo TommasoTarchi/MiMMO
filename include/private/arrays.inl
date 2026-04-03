@@ -130,7 +130,7 @@ void DualMemoryManager::update_array_device_to_host(DualArray<T> dual_array,
 #ifdef _OPENACC
   /* check that device pointer is initialized */
   if (dual_array.dev_ptr == nullptr)
-    abort_mimmo("Device pointer of dual array  is a null pointer.");
+    abort_mimmo("Device pointer of dual array is a null pointer.");
 
   /* copy data from device to host */
   acc_memcpy_from_device(dual_array.host_ptr + offset,
