@@ -1,7 +1,13 @@
 /**
  * @file abort.hpp
  *
- * @brief Declaration of functions for aborting the memory manager.
+ * @brief Declaration of error handling utilities.
+ *
+ * Internal utilities for aborting the program with formatted error messages.
+ * Used when invalid operations are detected (e.g., null pointers, tracking
+ * errors).
+ *
+ * @see abort.cpp for implementation
  */
 
 #pragma once
@@ -11,11 +17,7 @@
 namespace MiMMO {
 
 /**
- * @brief Aborts manager displaying an error message.
- *
- * @details
- * This function aborts the memory manager displaying an error
- * message passed by the user.
+ * @brief Aborts the program displaying an error message.
  *
  * @param message Error message to be displayed.
  */

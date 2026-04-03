@@ -1,8 +1,12 @@
 /**
  * @file memory_usage.cpp
  *
- * @brief Implementation of functions for reporting memory usage
- * (memory tracker, total memory, ...).
+ * @brief Implementation of memory reporting methods.
+ *
+ * Implements DualMemoryManager::return_total_memory_usage() and
+ * DualMemoryManager::report_memory_usage().
+ *
+ * @see api.hpp
  */
 
 #include "../include/mimmo/api.hpp"

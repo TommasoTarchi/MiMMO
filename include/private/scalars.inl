@@ -1,7 +1,16 @@
 /**
- * @file allocate.inl
+ * @file scalars.inl
  *
- * @brief Definition of method for managing dual scalars.
+ * @brief Definition of template methods for managing dual scalars.
+ *
+ * Implements the following DualMemoryManager methods:
+ * - create_scalar()
+ * - update_scalar_host_to_device()
+ * - update_scalar_device_to_host()
+ * - destroy_scalar()
+ *
+ * @see api.hpp for the corresponding declarations
+ * @see examples/globals/main.cpp for usage with global variables
  */
 
 #pragma once
@@ -11,11 +20,7 @@ namespace MiMMO {
 /**
  * @brief Creates a dual scalar.
  *
- * @details
- * This function creates a scalar variable on host and optionally on
- * device (allocating a one-element array), and assigns the requested
- * value. It returns an object of type DualScalar that contains the host
- * value and the device pointer.
+ * @tparam T          Type of the scalar variable.
  *
  * @param dual_scalar Dual scalar to be created.
  * @param label       Label that should be used to track the scalar in
@@ -76,15 +81,12 @@ void DualMemoryManager::create_scalar(DualScalar<T> &dual_scalar,
 /**
  * @brief Updates the value of a dual scalar from host to device.
  *
- * @details
- * This function updates the value of a dual scalar from host to device.
- *
- * If the scalar is not present on device, the program aborts.
- *
- * **Warning**: the scalar must have been previously created using the
- * create_scalar() method.
+ * @tparam T          Type of the scalar variable.
  *
  * @param dual_scalar Dual scalar to synchronize.
+ *
+ * @note The scalar must have been previously created using create_scalar().
+ *       If the scalar is not present on device, the program aborts.
  */
 template <typename T>
 void DualMemoryManager::update_scalar_host_to_device(
@@ -105,17 +107,13 @@ void DualMemoryManager::update_scalar_host_to_device(
 /**
  * @brief Updates the value of a dual scalar from device to host.
  *
- * @details
- * This function updates the value of a dual scalar from device to host.
- *
- * If the scalar is not present on device, the program aborts.
- *
- * If OpenACC is not enabled, this function does nothing.
- *
- * **Warning**: the scalar must have been previously created using the
- * create_scalar() method.
+ * @tparam T          Type of the scalar variable.
  *
  * @param dual_scalar Dual scalar to synchronize.
+ *
+ * @note The scalar must have been previously created using create_scalar().
+ *       If the scalar is not present on device, the program aborts.
+ *       If OpenACC is not enabled, this function does nothing.
  */
 template <typename T>
 void DualMemoryManager::update_scalar_device_to_host(
@@ -137,16 +135,13 @@ void DualMemoryManager::update_scalar_device_to_host(
 /**
  * @brief Frees memory allocated on device for a given scalar.
  *
- * @details
- * This function frees memory allocated on device for a given dual
- * scalar.
- *
- * If the scalar is not tracked (i.e. was not allocated using this
- * memory manager, or it was already freed), the program aborts.
- *
- * If OpenACC is not enabled, this function does nothing.
+ * @tparam T          Type of the scalar variable.
  *
  * @param dual_scalar Dual scalar to be destroyed.
+ *
+ * @note If the scalar is not tracked (i.e. was not allocated using this
+ *       memory manager, or it was already freed), the program aborts.
+ *       If OpenACC is not enabled, this function does nothing.
  */
 template <typename T>
 void DualMemoryManager::destroy_scalar(DualScalar<T> &dual_scalar) {

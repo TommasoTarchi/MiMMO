@@ -1,7 +1,40 @@
 /**
- * @file api.cpp
+ * @file api.hpp
  *
  * @brief Main library header with API definitions.
+ *
+ * @mainpage MiMMO (Minimal Memory Manager for OpenACC)
+ *
+ * This is the main public header of the MiMMO library. It provides:
+ * - DualArray and DualScalar data structures for host/device memory
+ * - DualMemoryManager class for memory operations
+ * - Helper macros for OpenACC compute regions
+ *
+ * @section example_usage Example Usage
+ *
+ * @code
+ * #include "mimmo/api.hpp"
+ *
+ * MiMMO::DualMemoryManager manager;
+ * MiMMO::DualArray<int> array;
+ *
+ * manager.alloc_array(array, "my_array", 100, true);
+ *
+ * // ... initialize data on host ...
+ *
+ * manager.update_array_host_to_device(array, 0, array.size);
+ *
+ * #pragma acc parallel MIMMO_PRESENT(array) default(none)
+ * {
+ *     // Use MIMMO_GET_PTR(array) inside compute regions
+ * }
+ *
+ * manager.update_array_device_to_host(array, 0, array.size);
+ * manager.free_array(array);
+ * @endcode
+ *
+ * @see examples/scalar_product/plain/main.cpp
+ * @see examples/globals/main.cpp
  */
 
 #pragma once
@@ -92,16 +125,13 @@ public:
   /**
    * @brief Copies data from host to device.
    *
-   * @details
-   * This function copies data from host to device for a given dual array.
-   *
-   * The array must have been previously allocated on both host and device.
-   *
-   * **Warning**: if OpenACC is not enabled, this function does nothing.
+   * @tparam T           Type of elements in the array.
    *
    * @param dual_array   Dual array to synchronize.
    * @param offset       Index of first element to be copied.
    * @param num_elements Number of elements to be copied.
+   *
+   * @note If OpenACC is not enabled, this function does nothing.
    */
   template <typename T>
   void update_array_host_to_device(DualArray<T> dual_array, const size_t offset,
@@ -110,16 +140,13 @@ public:
   /**
    * @brief Copies data from device to host.
    *
-   * @details
-   * This function copies data from device to host for a given dual array.
-   *
-   * The array must have been previously allocated on both host and device.
-   *
-   * **Warning**: if OpenACC is not enabled, this function does nothing.
+   * @tparam T           Type of elements in the array.
    *
    * @param dual_array   Dual array to synchronize.
    * @param offset       Index of first element to be copied.
    * @param num_elements Number of elements to be copied.
+   *
+   * @note If OpenACC is not enabled, this function does nothing.
    */
   template <typename T>
   void update_array_device_to_host(DualArray<T> dual_array, const size_t offset,
@@ -128,13 +155,11 @@ public:
   /**
    * @brief Frees memory allocated for a given dual array.
    *
-   * @details
-   * This function frees memory allocated for a given dual array.
-   *
-   * If the array is not tracked (i.e. was not allocated using this
-   * memory manager, or it was already freed), the program aborts.
+   * @tparam T         Type of elements in the array.
    *
    * @param dual_array Dual array to be freed.
+   *
+   * @note If the array is not tracked, the program aborts.
    */
   template <typename T> void free_array(DualArray<T> &dual_array);
 
@@ -162,15 +187,12 @@ public:
   /**
    * @brief Updates the value of a dual scalar from host to device.
    *
-   * @details
-   * This function updates the value of a dual scalar from host to device.
-   *
-   * If the scalar is not present on device, the program aborts.
-   *
-   * **Warning**: the scalar must have been previously created using the
-   * create_scalar() method.
+   * @tparam T          Type of the scalar variable.
    *
    * @param dual_scalar Dual scalar to synchronize.
+   *
+   * @note The scalar must have been previously created using create_scalar().
+   *       If the scalar is not present on device, the program aborts.
    */
   template <typename T>
   void update_scalar_host_to_device(DualScalar<T> &dual_scalar);
@@ -178,17 +200,13 @@ public:
   /**
    * @brief Updates the value of a dual scalar from device to host.
    *
-   * @details
-   * This function updates the value of a dual scalar from device to host.
-   *
-   * If the scalar is not present on device, the program aborts.
-   *
-   * If OpenACC is not enabled, this function does nothing.
-   *
-   * **Warning**: the scalar must have been previously created using the
-   * create_scalar() method.
+   * @tparam T          Type of the scalar variable.
    *
    * @param dual_scalar Dual scalar to synchronize.
+   *
+   * @note The scalar must have been previously created using create_scalar().
+   *       If the scalar is not present on device, the program aborts.
+   *       If OpenACC is not enabled, this function does nothing.
    */
   template <typename T>
   void update_scalar_device_to_host(DualScalar<T> &dual_scalar);
@@ -196,16 +214,12 @@ public:
   /**
    * @brief Frees memory allocated on device for a given scalar.
    *
-   * @details
-   * This function frees memory allocated on device for a given dual
-   * scalar.
-   *
-   * If the array is not tracked (i.e. was not allocated using this
-   * memory manager, or it was already freed), the program aborts.
-   *
-   * If OpenACC is not enabled, this function does nothing.
+   * @tparam T          Type of the scalar variable.
    *
    * @param dual_scalar Dual scalar to be destroyed.
+   *
+   * @note If the scalar is not tracked, the program aborts.
+   *       If OpenACC is not enabled, this function does nothing.
    */
   template <typename T> void destroy_scalar(DualScalar<T> &dual_scalar);
 
@@ -233,23 +247,17 @@ public:
    */
   void report_memory_usage();
 
-  // TODO: maybe the destructor is needed?
+  /// @todo Consider adding a destructor to clean up tracked memory.
 };
 
 } // namespace MiMMO
 
 /**
- * @brief Returns the right pointer (host or device) depending on whether
- * running on host or device.
+ * @brief Returns the device or host pointer depending on compilation flags.
  *
- * @details
- * This macro selects the host or the device pointer depending on whether
- * OpenACC is enabled or not.
+ * @param x Dual array from which the pointer should be selected.
  *
- * It is thought to be used inside OpenACC compute regions to keep the
- * code clean and avoid #ifdef's.
- *
- * @param x Dual array from which the needed pointer should be selected.
+ * @note Use inside OpenACC compute regions only.
  */
 #ifdef _OPENACC
 #define MIMMO_GET_PTR(x) (x).dev_ptr
@@ -258,17 +266,11 @@ public:
 #endif // _OPENACC
 
 /**
- * @brief Returns the right value (host or device) depending on whether
- * running on host or device.
+ * @brief Returns the device or host value depending on compilation flags.
  *
- * @details
- * This macro selects the value stored on host or device depending on whether
- * OpenACC is enabled or not.
+ * @param x Dual scalar from which the value should be selected.
  *
- * It is thought to be used inside OpenACC compute regions to keep the
- * code clean and avoid #ifdef's.
- *
- * @param x Dual scalar from which the needed value should be selected.
+ * @note Use inside OpenACC compute regions only.
  */
 #ifdef _OPENACC
 #define MIMMO_GET_VALUE(x) *((x).dev_ptr)
@@ -278,25 +280,15 @@ public:
 
 /**
  * @brief Communicates in an OpenACC pragma that a dual array or scalar is
- * present on device and copies "metadata" to device.
- *
- * @details
- * This macro must be used inside an OpenACC pragma placed at the beginning of
- * a compute region to communicate that the dual array or scalar is already
  * present on device.
  *
- * Internally, the macro communicates that the device pointer of the dual
- * object is actually a device pointer, and temporarily copies the structure
- * corresponding to the dual object to device.
- *
- * **Notice**: it takes only one argument in input; if you need to use it on
- * multiple objects within the same pragma, use multiple calls to the macro.
- *
- * **Notice**: there is no corresponding macro for copy on purpose, since all
- * data movements of dual objects are expected to be performed using methods of
- * DualMemoryManager.
- *
  * @param x Dual array or scalar present on device.
+ *
+ * @note Must be used inside an OpenACC pragma at the beginning of a compute
+ *       region.
+ * @note Takes only one argument; use multiple calls for multiple objects.
+ * @note No copy variant exists by design; use DualMemoryManager methods for
+ *       data movement.
  */
 #ifdef _OPENACC
 #define MIMMO_PRESENT(x) copyin(x) deviceptr(x.dev_ptr)

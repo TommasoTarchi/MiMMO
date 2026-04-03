@@ -1,9 +1,17 @@
 /**
  * @file main.cpp
  *
- * @brief Very simple example of scalar product between two arrays performed
- * on device using MiMMO's memory manager. In this version, a subroutine is
- * used.
+ * @brief Advanced example: scalar product using an OpenACC routine.
+ *
+ * Similar to examples/scalar_product/plain/main.cpp, but demonstrates:
+ * - Calling a subroutine from within an OpenACC parallel region
+ * - Using templates with #pragma acc routine
+ *
+ * @ingroup examples
+ *
+ * @see DualMemoryManager::alloc_array()
+ * @see MIMMO_GET_PTR
+ * @see MIMMO_PRESENT
  */
 
 #include "mimmo/api.hpp"

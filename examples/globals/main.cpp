@@ -1,8 +1,20 @@
 /**
  * @file main.cpp
  *
- * @brief Simple example of global variables manipulation using MiMMO
- * library.
+ * @brief Example: managing global extern variables with dual scalars.
+ *
+ * This example demonstrates:
+ * - Using DualScalar with global extern variables
+ * - Creating and destroying scalars on host and device
+ * - Using MIMMO_GET_VALUE() and MIMMO_PRESENT() with scalars
+ *
+ * @ingroup examples
+ *
+ * @see DualMemoryManager::create_scalar()
+ * @see DualMemoryManager::destroy_scalar()
+ * @see DualScalar
+ * @see MIMMO_GET_VALUE
+ * @see MIMMO_PRESENT
  */
 
 #include "allvars.hpp"
@@ -55,7 +67,8 @@ int main() {
   std::cout << global_array.host_ptr[0];
   for (int i = 1; i < global_array.size; i++)
     std::cout << ",  " << global_array.host_ptr[i];
-  std::cout << "]\n" << "Result scalar: " << global_scalar.host_value;
+  std::cout << "]\n"
+            << "Result scalar: " << global_scalar.host_value;
   std::cout << std::endl;
 
   /* free global array and destroy global scalar */

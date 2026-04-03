@@ -1,7 +1,15 @@
 /**
  * @file arrays.inl
  *
- * @brief Definition of methods for managing dual arrays.
+ * @brief Definition of template methods for managing dual arrays.
+ *
+ * Implements the following DualMemoryManager methods:
+ * - alloc_array()
+ * - update_array_host_to_device()
+ * - update_array_device_to_host()
+ * - free_array()
+ *
+ * @see api.hpp for the corresponding declarations
  */
 
 #pragma once
@@ -11,10 +19,7 @@ namespace MiMMO {
 /**
  * @brief Allocates dual array memory.
  *
- * @details
- * This function allocates memory on host and (if requested) on device
- * for a certain array. It returns an object of type DualArray,
- * containing host and device pointers.
+ * @tparam T         Type of elements in the array.
  *
  * @param dual_array Dual array to be allocated.
  * @param label      Label that should be used to track the array in
@@ -74,16 +79,13 @@ void DualMemoryManager::alloc_array(DualArray<T> &dual_array,
 /**
  * @brief Copies data from host to device.
  *
- * @details
- * This function copies data from host to device for a given dual array.
- *
- * The array must have been previously allocated on both host and device.
- *
- * **Warning**: if OpenACC is not enabled, this function does nothing.
+ * @tparam T           Type of elements in the array.
  *
  * @param dual_array   Dual array to synchronize.
  * @param offset       Index of first element to be copied.
  * @param num_elements Number of elements to be copied.
+ *
+ * @note If OpenACC is not enabled, this function does nothing.
  */
 template <typename T>
 void DualMemoryManager::update_array_host_to_device(DualArray<T> dual_array,
@@ -109,16 +111,13 @@ void DualMemoryManager::update_array_host_to_device(DualArray<T> dual_array,
 /**
  * @brief Copies data from device to host.
  *
- * @details
- * This function copies data from device to host for a given dual array.
- *
- * The array must have been previously allocated on both host and device.
- *
- * **Warning**: if OpenACC is not enabled, this function does nothing.
+ * @tparam T           Type of elements in the array.
  *
  * @param dual_array   Dual array to synchronize.
  * @param offset       Index of first element to be copied.
  * @param num_elements Number of elements to be copied.
+ *
+ * @note If OpenACC is not enabled, this function does nothing.
  */
 template <typename T>
 void DualMemoryManager::update_array_device_to_host(DualArray<T> dual_array,
@@ -144,13 +143,12 @@ void DualMemoryManager::update_array_device_to_host(DualArray<T> dual_array,
 /**
  * @brief Frees memory allocated for a given dual array.
  *
- * @details
- * This function frees memory allocated for a given dual array.
- *
- * If the array is not tracked (i.e. was not allocated using this
- * memory manager, or it was already freed), the program aborts.
+ * @tparam T         Type of elements in the array.
  *
  * @param dual_array Dual array to be freed.
+ *
+ * @note If the array is not tracked (i.e. was not allocated using this
+ *       memory manager, or it was already freed), the program aborts.
  */
 template <typename T>
 void DualMemoryManager::free_array(DualArray<T> &dual_array) {

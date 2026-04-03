@@ -1,7 +1,12 @@
 /**
  * @file memory_tracker.hpp
  *
- * @brief Declaration of functions for updating the memory tracker.
+ * @brief Declaration of functions for the memory tracker.
+ *
+ * Internal utilities for tracking allocated memory on host and device.
+ * Used by DualMemoryManager to maintain memory usage reports.
+ *
+ * @see memory_tracker.cpp for implementations
  */
 
 #pragma once
@@ -14,23 +19,18 @@ namespace MiMMO {
 /**
  * @brief Adds an entry to the given memory tracker.
  *
- * @details
- * This function adds an array to the given memory tracker in the form
- * (label, (size, on_device)).
- *
- * If the label (key) is already present, the input is ignored and error
- * is returned.
- *
  * @param memory_tracker   Memory tracker to update.
  * @param tot_memory_usage Pair containing total host and device memory
  *                         usage.
- * @param object           Pointer to dual object to be removed.
+ * @param object           Pointer to dual object to be added.
  * @param label            Label of the array to be added.
  * @param size             Size in bytes of the array to be added.
  * @param on_device        Whether the array is allocated on device.
  *
  * @return                 'true' if the array was already tracked, 'false'
  *                         otherwise.
+ *
+ * @note If the label (key) is already present, the entry is ignored.
  */
 bool add_to_memory_tracker(
     std::map<void *, std::tuple<std::string, size_t, bool>> &memory_tracker,
@@ -40,13 +40,6 @@ bool add_to_memory_tracker(
 /**
  * @brief Removes an entry from the given memory tracker.
  *
- * @details
- * This function removes an array with a given label from the given memory
- * tracker.
- *
- * If the label (key) is not present, the input is ignored and error is
- * returned.
- *
  * @param memory_tracker   Memory tracker to update.
  * @param tot_memory_usage Pair containing total host and device memory
  *                         usage.
@@ -54,6 +47,8 @@ bool add_to_memory_tracker(
  *
  * @return                 'true' if the array was not tracked, 'false'
  *                         otherwise.
+ *
+ * @note If the object is not tracked, the operation is ignored.
  */
 bool remove_from_memory_tracker(
     std::map<void *, std::tuple<std::string, size_t, bool>> &memory_tracker,

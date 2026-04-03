@@ -1,7 +1,12 @@
 /**
  * @file allvars.cpp
  *
- * @brief Source file with definitions of global variables.
+ * @brief Definitions of global variables for the globals example.
+ *
+ * @ingroup examples
+ *
+ * @see allvars.hpp
+ * @see examples/globals/main.cpp
  */
 
 #include "allvars.hpp"

@@ -1,7 +1,18 @@
 /**
  * @file unit_tests_main.cpp
  *
- * @brief Unit tests for the MiMMO library, using Catch2.
+ * @brief Unit tests for the MiMMO library using Catch2.
+ *
+ * Tests cover:
+ * - Basic memory allocation and deallocation
+ * - Memory copy operations (host-to-device and device-to-host)
+ * - Partial memory copies
+ * - Scalar creation and updates
+ * - Macro functionality (MIMMO_GET_PTR, MIMMO_GET_VALUE, MIMMO_PRESENT)
+ *
+ * @see DualMemoryManager
+ * @see DualArray
+ * @see DualScalar
  */
 
 #include "../include/mimmo/api.hpp"

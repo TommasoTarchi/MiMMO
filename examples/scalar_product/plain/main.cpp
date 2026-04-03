@@ -1,8 +1,21 @@
 /**
  * @file main.cpp
  *
- * @brief Very simple example of scalar product between two arrays performed
- * on device using MiMMO's memory manager.
+ * @brief Basic example: scalar product of two arrays on device.
+ *
+ * This example demonstrates basic MiMMO usage:
+ * - Creating a DualMemoryManager
+ * - Allocating dual arrays on host and device
+ * - Copying data between host and device
+ * - Using MIMMO_GET_PTR() and MIMMO_PRESENT() in OpenACC regions
+ *
+ * @ingroup examples
+ *
+ * @see DualMemoryManager::alloc_array()
+ * @see DualMemoryManager::update_array_host_to_device()
+ * @see DualMemoryManager::update_array_device_to_host()
+ * @see MIMMO_GET_PTR
+ * @see MIMMO_PRESENT
  */
 
 #include "mimmo/api.hpp"

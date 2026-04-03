@@ -1,7 +1,9 @@
 /**
  * @file abort.cpp
  *
- * @brief Implementation of functions for aborting the memory manager.
+ * @brief Implementation of error handling utilities.
+ *
+ * @see abort.hpp
  */
 
 #include "../include/private/abort.hpp"
@@ -9,15 +11,12 @@
 
 namespace MiMMO {
 
-// TODO: give more info in error if possible
 /**
- * @brief Aborts manager displaying an error message.
- *
- * @details
- * This function aborts the memory manager displaying an error
- * message passed by the user.
+ * @brief Aborts the program displaying an error message.
  *
  * @param message Error message to be displayed.
+ *
+ * @todo Consider adding more context to error messages.
  */
 void abort_mimmo(const std::string message) {
 

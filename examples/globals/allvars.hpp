@@ -1,7 +1,13 @@
 /**
  * @file allvars.hpp
  *
- * @brief Header with declarations of global variables.
+ * @brief Declarations of global variables for the globals example.
+ *
+ * Defines global extern variables that will be managed by MiMMO.
+ *
+ * @ingroup examples
+ *
+ * @see examples/globals/main.cpp
  */
 
 #pragma once
