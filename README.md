@@ -6,14 +6,14 @@
 
 **MiMMO** (Minimal Memory Manager for OpenACC) is a simple, safe, and easy-to-use CPU/GPU memory manager for OpenACC programs.
 
-OpenACC's pragma-based approach is powerful, but its high-level memory management can be opaque. MiMMO provides finer control over memory allocations and transfers while keeping the code clean and safe.
+OpenACC's pragma-based approach is powerful, but its high-level memory management can be opaque. MiMMO provides finer control over memory allocations and transfers while keeping the code within compute regions clean and safe.
 
 Under the hood, MiMMO wraps the OpenACC runtime API. It tracks all host and device allocations, with memory reports available on demand.
 
 ## Features
 
 - **Dual arrays**: Explicit host/device pointers with tracked metadata
-- **Dual scalars**: Simplified global variable management
+- **Dual scalars**: Explicit management for global `extern` variables (local variables are handled automatically by OpenACC)
 - **Safety**: Macros ensure correct pointer access within parallel regions
 - **Transparency**: Request memory usage reports at any time
 - **Header-only core**: GPU support only requires linking OpenACC at compile time
@@ -74,7 +74,7 @@ Docs are placed in `build/docs/`.
 
 ## Usage
 
-MiMMO works with *dual arrays* (host/device pointers with metadata) and *dual scalars* (host value with device pointer). Include `mimmo/api.hpp` and use the `MiMMO` namespace.
+MiMMO works with *dual arrays* (host/device pointers with metadata) and *dual scalars* (host value with device pointer for global `extern` variables). Include `mimmo/api.hpp` and use the `MiMMO` namespace.
 
 Working examples are in [`examples/`](./examples/).
 
@@ -110,8 +110,8 @@ See the [Doxygen documentation](#generate-documentation) for full details.
 
 ### Macros
 
-- **`MIMMO_GET_PTR()`**: Returns device pointer (OpenACC) or host pointer; use inside parallel regions only
-- **`MIMMO_GET_VALUE()`**: Returns device value (OpenACC) or host value; use inside parallel regions only
+- **`MIMMO_GET_PTR()`**: Returns device pointer (OpenACC) or host pointer; **use inside parallel regions only**
+- **`MIMMO_GET_VALUE()`**: Returns device value (OpenACC) or host value; **use inside parallel regions only**
 - **`MIMMO_PRESENT()`**: Informs OpenACC that data is already on device; use in pragma clauses
 
 > Always use `MIMMO_PRESENT()` in pragmas to indicate data is present on device.

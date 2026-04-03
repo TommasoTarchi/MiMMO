@@ -25,6 +25,7 @@ Thank you for your interest in contributing to MiMMO!
 - Use meaningful variable and function names
 - Add Doxygen comments for public APIs
 - Keep headers self-contained with proper includes
+- Run `clang-format` before committing (configuration in `.clang-format`)
 
 ### Testing
 
@@ -48,7 +49,7 @@ MiMMO/
 ├── src/                # Implementation files (if any)
 ├── tests/              # Unit tests
 ├── examples/           # Usage examples
-└── docs/               # Documentation (generated)
+└── docs/               # Documentation config files
 ```
 
 ## Questions?
