@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(git *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command // empty' | { read -r cmd; pattern='(^|[;&|]|[[:space:]])(git|[^[:space:]]*/git)([[:space:]]|$)'; if echo \"$cmd\" | grep -iE \"$pattern\" >/dev/null; then echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"git commands are disabled in this project (see CLAUDE.md / AGENTS.md).\"}}'; else echo '{}'; fi; }",
+            "statusMessage": "Checking command is not git"
+          }
+        ]
+      }
+    ]
+  }
+}

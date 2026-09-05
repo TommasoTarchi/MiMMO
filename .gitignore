@@ -5,3 +5,6 @@
 
 # build directories
 **/build/
+
+# user-specific files
+.claude/settings.local.json
