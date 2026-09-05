@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <cstdlib>
+
 namespace MiMMO {
 
 /**
@@ -36,6 +38,9 @@ void DualMemoryManager::alloc_array(DualArray<T> &dual_array,
 
   /* allocate memory on host */
   dual_array.host_ptr = (T *)std::malloc(size * sizeof(T));
+
+  if (!(dual_array.host_ptr))
+    abort_mimmo("Failed to allocate host memory.");
 
   /* if required, allocate memory on device */
 #ifdef _OPENACC

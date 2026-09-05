@@ -10,6 +10,7 @@
  */
 
 #include "../include/mimmo/api.hpp"
+#include <algorithm>
 #include <iomanip>
 #include <iostream>
 

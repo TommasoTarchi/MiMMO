@@ -41,6 +41,7 @@
 
 #include "../private/abort.hpp"
 #include "../private/memory_tracker.hpp"
+#include <utility>
 #ifdef _OPENACC
 #include <openacc.h>
 #endif // _OPENACC
