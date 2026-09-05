@@ -49,9 +49,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Read `CONTRIBUTING.md` before proposing changes to project structure or conventions.
 - Detailed rules for dual-memory and OpenACC code live in `.claude/rules/openacc.md` and
   load automatically when you touch matching files.
-- Git usage is blocked at the tool level (see `.claude/settings.json`), not just requested
-  in AGENTS.md, so it's enforced even if Claude forgets the instruction. The `git clone`
-  line in `README.md` is instructions for humans, not something to execute.
-- The sandboxed Bash tool is enabled and restricted to the project directory (see
-  `.claude/settings.json`). Enforced by the OS, not by instructions, so it holds for
-  subagents too.
+- Git usage is blocked at the tool level by a `PreToolUse` hook
+  (`.claude/hooks/block-git.sh`, wired in `.claude/settings.json`) that rejects any Bash
+  command matching `git`, not just requested in AGENTS.md — so it's enforced even if
+  Claude forgets the instruction. The `git clone` line in `README.md` is instructions
+  for humans, not something to execute.
+- `.claude/settings.json` currently has `sandbox.enabled: false` (temporarily disabled,
+  per its own recent commit) — don't assume Bash is OS-sandboxed to the project
+  directory right now; check that file if sandboxing behavior matters for a task.
