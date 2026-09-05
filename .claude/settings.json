@@ -2,7 +2,8 @@
   "permissions": {
     "deny": [
       "Bash(git *)"
-    ]
+    ],
+    "blockReadsOutsideWorkingDirectories": true
   },
   "hooks": {
     "PreToolUse": [
@@ -13,6 +14,16 @@
             "type": "command",
             "command": "jq -r '.tool_input.command // empty' | { read -r cmd; pattern='(^|[;&|]|[[:space:]])(git|[^[:space:]]*/git)([[:space:]]|$)'; if echo \"$cmd\" | grep -iE \"$pattern\" >/dev/null; then echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"git commands are disabled in this project (see CLAUDE.md / AGENTS.md).\"}}'; else echo '{}'; fi; }",
             "statusMessage": "Checking command is not git"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r fp; root=$(readlink -f -- \"${CLAUDE_PROJECT_DIR:-$PWD}\"); if [ -z \"$fp\" ]; then echo '{}'; exit 0; fi; case \"$fp\" in /*) target=\"$fp\" ;; *) target=\"$root/$fp\" ;; esac; real=$(readlink -f -- \"$target\" 2>/dev/null || echo \"$target\"); case \"$real\" in \"$root\"|\"$root\"/*) echo '{}' ;; *) echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"Writing outside the project directory is disabled for this project.\"}}' ;; esac; }",
+            "statusMessage": "Checking file path is inside the project"
           }
         ]
       }
