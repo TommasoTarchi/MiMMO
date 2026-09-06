@@ -98,6 +98,11 @@ plus a **small compiled runtime** for tracking/reporting:
   manage `extern` global variables shared between host and device, since
   OpenACC only auto-manages *local* variables).
 
+## Documentation
+
+Whenever a change modifies the public interface or observable code behavior,
+always update `README.md` to reflect it in the same change.
+
 ## Code style
 
 - Formatting is enforced by `.clang-format` (2-space indent, 80-column limit)
