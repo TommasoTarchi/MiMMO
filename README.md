@@ -2,6 +2,7 @@
 
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C.svg)](https://en.wikipedia.org/wiki/C%2B%2B17)
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://tommasotarchi.github.io/MiMMO/)
 [![OpenACC](https://img.shields.io/badge/OpenACC-2.0-15B2D3?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxNUIyRDMiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMTRjLTUuNTIgMC0xMC00LjQ4LTEwLTEwUzYuNDggMiAxMiAyUzIyIDYuNDggMjIgMTJzLTQuNDggNi00LjQ4IDZoLS40OEw3IDE0bDQgNCA0LTRMMiA1LjI4WiIgLz48L3N2Zz4=)](https://www.openacc.org/)
 
 **MiMMO** (Minimal Memory Manager for OpenACC) is a simple, safe, and easy-to-use CPU/GPU memory manager for OpenACC programs.
@@ -22,6 +23,7 @@ Under the hood, MiMMO wraps the OpenACC runtime API. It tracks all host and devi
 - [Quick Start](#quick-start)
 - [Requirements](#requirements)
 - [Building and Testing](#building-and-testing)
+- [Documentation](#documentation)
 - [Usage](#usage)
 - [API Reference](#api-reference)
 - [Contributing](#contributing)
@@ -64,13 +66,20 @@ Options:
 - `-DUNIT_TESTS=OFF`: Skip Catch2 test overhead
 - `-DOPENACC=OFF`: Build without OpenACC support
 
-### Generate documentation
+## Documentation
+
+The API documentation is published at
+[tommasotarchi.github.io/MiMMO](https://tommasotarchi.github.io/MiMMO/), and is
+rebuilt automatically whenever `main` is updated.
+
+To generate it locally (requires Doxygen, and Graphviz for the diagrams):
 
 ```bash
 cmake --build build --target docs
 ```
 
-Docs are placed in `build/docs/`.
+Docs are placed in `build/docs/html/`; open `build/docs/html/index.html` in a
+browser.
 
 ## Usage
 
@@ -92,7 +101,7 @@ export LD_LIBRARY_PATH=</path/to/MiMMO>/build:$LD_LIBRARY_PATH
 
 ## API Reference
 
-See the [Doxygen documentation](#generate-documentation) for full details.
+See the [online documentation](https://tommasotarchi.github.io/MiMMO/) for full details.
 
 ### Data structures
 

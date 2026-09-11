@@ -39,6 +39,17 @@ Thank you for your interest in contributing to MiMMO!
 - Add Doxygen documentation for new public APIs
 - Include examples for new features
 
+The Doxygen documentation is published at
+[tommasotarchi.github.io/MiMMO](https://tommasotarchi.github.io/MiMMO/) by the
+`MiMMO docs` workflow, which rebuilds it on every push to `main`. The same
+workflow builds the documentation on pull requests (without publishing it), so
+Doxygen failures are caught before merging. To check your changes locally:
+
+```bash
+cmake -S . -B build -DOPENACC=OFF -DUNIT_TESTS=OFF
+cmake --build build --target docs
+```
+
 ## Project Structure
 
 ```
