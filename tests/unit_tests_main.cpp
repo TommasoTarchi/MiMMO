@@ -909,7 +909,9 @@ TEST_CASE("Subroutine call", "[mimmo]") {
 
 #pragma acc parallel MIMMO_PRESENT(test_array)                                 \
     MIMMO_PRESENT(test_scalar) default(none)
-  { scale_array(test_array, test_scalar); }
+  {
+    scale_array(test_array, test_scalar);
+  }
 
   memory_manager.update_array_device_to_host(test_array, 0, test_array.size);
 
