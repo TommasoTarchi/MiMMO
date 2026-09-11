@@ -1,0 +1,56 @@
+name: MiMMO docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# permissions needed by the GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# allow one concurrent deployment, without cancelling running ones
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake doxygen graphviz
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DOPENACC=OFF -DUNIT_TESTS=OFF
+
+      - name: Build documentation
+        run: cmake --build build --target docs
+
+      - name: Upload documentation artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/docs/html
+
+  deploy:
+    # only publish the documentation built from the default branch
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
