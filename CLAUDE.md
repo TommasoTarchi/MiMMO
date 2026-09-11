@@ -11,8 +11,7 @@ high-level `copyin`/`copyout` data clauses.
 
 ## Git workflow
 
-Do **not** use any `git` command in this repository (no `git status`, `git
-diff`, `git add`, `git commit`, etc.). Leave version control to the user.
+**Never** push directly to `main` nor `development` branches.
 
 ## Build and test commands
 
