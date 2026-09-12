@@ -299,7 +299,7 @@ TEST_CASE("Memcopy - partial copy", "[mimmo]") {
 /**
  * @brief Scalar value update test.
  */
-TEST_CASE("Scalar value update", "[mimmo]") {
+TEST_CASE("Scalar value update - host to device", "[mimmo]") {
   MiMMO::DualMemoryManager memory_manager = MiMMO::DualMemoryManager();
 
   MiMMO::DualScalar<int> test_scalar;

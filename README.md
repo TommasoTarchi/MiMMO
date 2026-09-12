@@ -105,8 +105,8 @@ See the [online documentation](https://tommasotarchi.github.io/MiMMO/) for full 
 
 ### Data structures
 
-- **`DualArray`**: Contains `host_ptr`, `dev_ptr`, `label`, `size`, `size_bytes`
-- **`DualScalar`**: Contains `host_value`, `dev_ptr`, `label`
+- **`DualArray`**: Contains `host_ptr`, `dev_ptr`, `size`, `size_bytes`
+- **`DualScalar`**: Contains `host_value`, `dev_ptr`
 
 ### Class
 
