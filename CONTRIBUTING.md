@@ -46,7 +46,7 @@ workflow builds the documentation on pull requests (without publishing it), so
 Doxygen failures are caught before merging. To check your changes locally:
 
 ```bash
-cmake -S . -B build -DDEVICE_TESTS=OFF -DUNIT_TESTS=OFF
+cmake -S . -B build -DTESTS=NONE
 cmake --build build --target docs
 ```
 

@@ -15,13 +15,20 @@ add_library(MiMMO SHARED
     src/memory_usage.cpp
 )
 
-# enable OpenACC
-option(DEVICE_TESTS "Enable OpenACC for tests" ON)
+# which tests to build: NONE (skip tests entirely), CPU (host-only tests,
+# any C++17 compiler), GPU (full OpenACC tests, requires NVHPC/CXX=nvc++)
+set(TESTS "GPU" CACHE STRING "Which tests to build: NONE, CPU, or GPU")
+set_property(CACHE TESTS PROPERTY STRINGS NONE CPU GPU)
 
-if(DEVICE_TESTS)
+if(NOT TESTS MATCHES "^(NONE|CPU|GPU)$")
+    message(FATAL_ERROR "TESTS must be one of NONE, CPU, GPU (got '${TESTS}')")
+endif()
+
+# enable OpenACC (required for GPU tests)
+if(TESTS STREQUAL "GPU")
     # check compiler support
     if(NOT CMAKE_CXX_COMPILER_ID MATCHES "NVHPC")
-        message(FATAL_ERROR "For OpenACC make sure the NVIDIA compiler is available and set CXX=nvc++. Remember that the library can be built without OpenACC for tests, just pass '-DDEVICE_TESTS=OFF'")
+        message(FATAL_ERROR "For GPU tests make sure the NVIDIA compiler is available and set CXX=nvc++")
     endif()
 
     # find package
@@ -29,8 +36,6 @@ if(DEVICE_TESTS)
 
     # link library
     target_link_libraries(MiMMO PUBLIC OpenACC::OpenACC_CXX)
-
-    # TODO: maybe add custom compile options (ACCFLAGS for instance)
 endif()
 
 # include directories
@@ -45,10 +50,7 @@ set_target_properties(MiMMO PROPERTIES OUTPUT_NAME "mimmo")
 
 ### unit tests ###
 
-# get option
-option(UNIT_TESTS "Enable unit testing" ON)
-
-if(UNIT_TESTS)
+if(NOT TESTS STREQUAL "NONE")
     # download and include Catch2
     include(FetchContent)
 

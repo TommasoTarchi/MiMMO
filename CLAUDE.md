@@ -19,11 +19,11 @@ high-level `copyin`/`copyout` data clauses.
 # Configure and build (requires CXX=nvc++ / NVHPC for OpenACC support)
 mkdir build && cmake -S . -B build && cmake --build build
 
-# Build without OpenACC (any C++17 compiler)
-cmake -S . -B build -DDEVICE_TESTS=OFF
+# Build with host-only tests, no OpenACC (any C++17 compiler)
+cmake -S . -B build -DTESTS=CPU
 
-# Build without the Catch2 unit test target
-cmake -S . -B build -DUNIT_TESTS=OFF
+# Build without the Catch2 unit test target at all
+cmake -S . -B build -DTESTS=NONE
 
 # Generate Doxygen docs (output in build/docs/)
 cmake --build build --target docs
@@ -35,13 +35,18 @@ ctest --test-dir build --output-on-failure
 ctest --test-dir build -R "test_name" --output-on-failure
 ```
 
-The test executable is `build/unit_tests.x`; tests are auto-registered with
-CTest via `catch_discover_tests`. Catch2 v3.4.0 is fetched automatically by
-CMake (`FetchContent`) when `UNIT_TESTS=ON`.
+`TESTS` (`NONE` / `CPU` / `GPU`, default `GPU`) is the single option
+controlling both whether the Catch2 test target is built and whether OpenACC
+is enabled: `NONE` skips the test target entirely, `CPU` builds it without
+OpenACC, `GPU` builds it with OpenACC (and links `MiMMO` itself against the
+OpenACC runtime). The test executable is `build/unit_tests.x`; tests are
+auto-registered with CTest via `catch_discover_tests`. Catch2 v3.4.0 is
+fetched automatically by CMake (`FetchContent`) whenever `TESTS` is not
+`NONE`.
 
-On non-NVHPC compilers, OpenACC is unavailable, so use `-DDEVICE_TESTS=OFF`
-(CMake fails with `FATAL_ERROR` otherwise, since it requires
-`CMAKE_CXX_COMPILER_ID MATCHES "NVHPC"`).
+On non-NVHPC compilers, OpenACC is unavailable, so use `-DTESTS=CPU` (or
+`-DTESTS=NONE`) — CMake fails with `FATAL_ERROR` otherwise, since `GPU`
+requires `CMAKE_CXX_COMPILER_ID MATCHES "NVHPC"`.
 
 ## Architecture
 

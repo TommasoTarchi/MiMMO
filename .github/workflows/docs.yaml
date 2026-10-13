@@ -28,7 +28,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y cmake doxygen graphviz
 
       - name: Configure CMake
-        run: cmake -S . -B build -DDEVICE_TESTS=OFF -DUNIT_TESTS=OFF
+        run: cmake -S . -B build -DTESTS=NONE
 
       - name: Build documentation
         run: cmake --build build --target docs

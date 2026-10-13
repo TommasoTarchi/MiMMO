@@ -49,9 +49,9 @@ Include `mimmo/api.hpp` and link against `libmimmo.so` (in `build/`).
 - **C++17 compiler**: **NVIDIA HPC SDK (NVHPC)** 25.x recommended
 - **Doxygen** (optional): for API documentation
 
-> **Note**: MiMMO's device-memory logic (`acc_malloc`, `acc_memcpy_to_device`, ...) lives in templated headers, so it is compiled into *your* program, not into `libmimmo.so`. GPU support is therefore controlled by whether your own translation units are compiled with `-acc`, regardless of the flags MiMMO itself was built with — a `libmimmo.so` built with `-DDEVICE_TESTS=OFF` is just as GPU-capable as one built with NVHPC.
+> **Note**: MiMMO's device-memory logic (`acc_malloc`, `acc_memcpy_to_device`, ...) lives in templated headers, so it is compiled into *your* program, not into `libmimmo.so`. GPU support is therefore controlled by whether your own translation units are compiled with `-acc`, regardless of the flags MiMMO itself was built with — a `libmimmo.so` built with `-DTESTS=CPU` is just as GPU-capable as one built with NVHPC.
 >
-> `-DDEVICE_TESTS=OFF` is required on non-NVHPC compilers (the default, `ON`, requires `CXX=nvc++` and aborts configuration otherwise). `-DUNIT_TESTS=OFF` is independent and only skips building the Catch2 test target.
+> `-DTESTS=CPU` (or `-DTESTS=NONE`) is required on non-NVHPC compilers (the default, `GPU`, requires `CXX=nvc++` and aborts configuration otherwise).
 
 ## Building and Testing
 
@@ -63,8 +63,10 @@ ctest --test-dir build --output-on-failure
 ```
 
 Options:
-- `-DUNIT_TESTS=OFF`: Skip Catch2 test overhead
-- `-DDEVICE_TESTS=OFF`: Skip OpenACC when compiling the tests (required on non-NVHPC compilers)
+- `-DTESTS=NONE|CPU|GPU` (default `GPU`): Which tests to build. `NONE` skips
+  the Catch2 test target entirely; `CPU` builds host-only tests on any
+  C++17 compiler; `GPU` builds full OpenACC tests and requires NVHPC
+  (`CXX=nvc++`)
 
 ## Documentation
 

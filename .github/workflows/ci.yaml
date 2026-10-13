@@ -18,7 +18,7 @@ jobs:
           extra_args: --all-files
 
       - name: Configure CMake
-        run: cmake -S . -B build -DDEVICE_TESTS=OFF
+        run: cmake -S . -B build -DTESTS=CPU
 
       - name: Build
         run: cmake --build build
