@@ -17,7 +17,7 @@ Under the hood, MiMMO wraps the OpenACC runtime API. It tracks all host and devi
 - **Dual scalars**: Explicit management for global `extern` variables (local variables are handled automatically by OpenACC)
 - **Safety**: Macros ensure correct pointer access within parallel regions
 - **Transparency**: Request memory usage reports at any time
-- **Header-only core**: GPU support only requires linking OpenACC at compile time
+- **Header-only device layer**: all OpenACC calls live in templated headers, instantiated in *your* translation units, so GPU support is controlled by how your program is compiled, not by how MiMMO itself was built
 
 ## Table of Contents
 - [Quick Start](#quick-start)
@@ -49,9 +49,9 @@ Include `mimmo/api.hpp` and link against `libmimmo.so` (in `build/`).
 - **C++17 compiler**: **NVIDIA HPC SDK (NVHPC)** 25.x recommended
 - **Doxygen** (optional): for API documentation
 
-> **Note**: GPU support is not required to compile MiMMO. The library is header-only for OpenACC calls; GPU features activate by linking OpenACC at compile time.
+> **Note**: MiMMO's device-memory logic (`acc_malloc`, `acc_memcpy_to_device`, ...) lives in templated headers, so it is compiled into *your* program, not into `libmimmo.so`. GPU support is therefore controlled by whether your own translation units are compiled with `-acc`, regardless of the flags MiMMO itself was built with — a `libmimmo.so` built with `-DDEVICE_TESTS=OFF` is just as GPU-capable as one built with NVHPC.
 >
-> If possible, use the same compiler for MiMMO and your program. On non-OpenACC compilers, use `-DOPENACC=OFF` or `-DUNIT_TESTS=OFF`.
+> `-DDEVICE_TESTS=OFF` is required on non-NVHPC compilers (the default, `ON`, requires `CXX=nvc++` and aborts configuration otherwise). `-DUNIT_TESTS=OFF` is independent and only skips building the Catch2 test target.
 
 ## Building and Testing
 
@@ -64,7 +64,7 @@ ctest --test-dir build --output-on-failure
 
 Options:
 - `-DUNIT_TESTS=OFF`: Skip Catch2 test overhead
-- `-DOPENACC=OFF`: Build without OpenACC support
+- `-DDEVICE_TESTS=OFF`: Skip OpenACC when compiling the tests (required on non-NVHPC compilers)
 
 ## Documentation
 
@@ -98,6 +98,20 @@ Ensure the dynamic linker finds the library:
 ```bash
 export LD_LIBRARY_PATH=</path/to/MiMMO>/build:$LD_LIBRARY_PATH
 ```
+
+### CPU-only mode
+
+If your program is compiled without `-acc` (so `_OPENACC` is undefined), MiMMO
+falls back to a host-only mode instead of failing:
+
+- `DualArray::dev_ptr` / `DualScalar::dev_ptr` stay `nullptr`, even when
+  `on_device` is `true`
+- `update_array_*` / `update_scalar_*` become no-ops
+- `MIMMO_GET_PTR()` / `MIMMO_GET_VALUE()` resolve to the host pointer/value,
+  and `MIMMO_PRESENT()` expands to nothing
+
+This lets the same source compile and run correctly as a plain host memory
+manager on machines without OpenACC.
 
 ## API Reference
 

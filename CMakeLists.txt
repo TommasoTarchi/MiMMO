@@ -16,12 +16,12 @@ add_library(MiMMO SHARED
 )
 
 # enable OpenACC
-option(OPENACC "Enable OpenACC" ON)
+option(DEVICE_TESTS "Enable OpenACC for tests" ON)
 
-if(OPENACC)
+if(DEVICE_TESTS)
     # check compiler support
     if(NOT CMAKE_CXX_COMPILER_ID MATCHES "NVHPC")
-        message(FATAL_ERROR "For OpenACC make sure the NVIDIA compiler is available and set CXX=nvc++")
+        message(FATAL_ERROR "For OpenACC make sure the NVIDIA compiler is available and set CXX=nvc++. Remember that the library can be built without OpenACC for tests, just pass '-DDEVICE_TESTS=OFF'")
     endif()
 
     # find package

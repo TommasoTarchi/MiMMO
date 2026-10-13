@@ -20,7 +20,7 @@ high-level `copyin`/`copyout` data clauses.
 mkdir build && cmake -S . -B build && cmake --build build
 
 # Build without OpenACC (any C++17 compiler)
-cmake -S . -B build -DOPENACC=OFF
+cmake -S . -B build -DDEVICE_TESTS=OFF
 
 # Build without the Catch2 unit test target
 cmake -S . -B build -DUNIT_TESTS=OFF
@@ -39,7 +39,7 @@ The test executable is `build/unit_tests.x`; tests are auto-registered with
 CTest via `catch_discover_tests`. Catch2 v3.4.0 is fetched automatically by
 CMake (`FetchContent`) when `UNIT_TESTS=ON`.
 
-On non-NVHPC compilers, OpenACC is unavailable, so use `-DOPENACC=OFF`
+On non-NVHPC compilers, OpenACC is unavailable, so use `-DDEVICE_TESTS=OFF`
 (CMake fails with `FATAL_ERROR` otherwise, since it requires
 `CMAKE_CXX_COMPILER_ID MATCHES "NVHPC"`).
 
